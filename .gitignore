@@ -1,0 +1,10 @@
+.idea
+.terraform
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+.env
+kubeconfig_eks-*
+kubeconfig
+
+ingress.yaml
