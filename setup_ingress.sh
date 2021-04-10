@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-cat > ./manifests/ingress.yml <<EOF
+cat > ./manifests/ingress.yaml <<EOF
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
