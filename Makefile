@@ -18,13 +18,13 @@ build:
 
 up:
 	./setup_ingress.sh $(shell terraform output -raw acm_cert_arn) $(hostname)
-	$(kconfig) kubectl apply -f ./manifests/deployment.yml -f ./manifests/traefik.yml -f ./manifests/ingress.yml
-	$(kconfig) kubectl apply -f ./manifests/ingress-route.yml
+	$(kconfig) kubectl apply -f ./manifests/deployment.yaml -f ./manifests/traefik.yaml -f ./manifests/ingress.yaml
+	$(kconfig) kubectl apply -f ./manifests/ingress-route.yaml
 .PHONY: up
 
 down:
-	$(kconfig) kubectl delete -f ./manifests/ingress-route.yml
-	$(kconfig) kubectl delete -f ./manifests/deployment.yml -f ./manifests/traefik.yml -f ./manifests/ingress.yml
+	$(kconfig) kubectl delete -f ./manifests/ingress-route.yaml
+	$(kconfig) kubectl delete -f ./manifests/deployment.yaml -f ./manifests/traefik.yaml -f ./manifests/ingress.yaml
 .PHONY: down
 
 apply: init build up
