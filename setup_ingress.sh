@@ -16,7 +16,7 @@ metadata:
     app: traefik
 spec:
   rules:
-    - host: $1
+    - host: $2
       http:
         paths:
           # HTTP to HTTPS redirect entry
