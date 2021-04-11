@@ -32,12 +32,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: auth0-auth-domain
+                  key: auth0-domain
             - name: API_WEB_AUTH_AUDIENCE
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: auth0-auth-audience
+                  key: auth0-audience
             - name: API_DB_USER
               valueFrom:
                 secretKeyRef:
