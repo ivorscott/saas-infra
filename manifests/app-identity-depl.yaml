@@ -13,7 +13,7 @@ spec:
         app: app-identity
     spec:
       containers:
-        - image: devpies/app-identity:latest
+        - image: devpies/app-identity:5591bd0
           name: app-identity
           resources:
             requests:
