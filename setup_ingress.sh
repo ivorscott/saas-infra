@@ -16,16 +16,16 @@ metadata:
   labels:
     app: traefik
 spec:
-  - rules:
-    http:
-      paths:
-        # HTTP to HTTPS redirect entry
-        - path: /*
-          backend:
-            serviceName: ssl-redirect
-            servicePort: use-annotation
-        - path: /*
-          backend:
-            serviceName: traefik
-            servicePort: 443
+  rules:
+    - http:
+        paths:
+          # HTTP to HTTPS redirect entry
+          - path: /*
+            backend:
+              serviceName: ssl-redirect
+              servicePort: use-annotation
+          - path: /*
+            backend:
+              serviceName: traefik
+              servicePort: 443
 EOF
