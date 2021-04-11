@@ -32,32 +32,32 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-auth0-auth-domain
+                  key: auth0-auth-domain
             - name: API_WEB_AUTH_AUDIENCE
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-auth0-auth-audience
+                  key: auth0-auth-audience
             - name: API_DB_USER
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-projects-username
+                  key: qa-mic-db-projects-username
             - name: API_DB_NAME
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-projects-database-name
+                  key: qa-mic-db-projects-database-name
             - name: API_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-projects-password
+                  key: qa-mic-db-projects-password
             - name: API_DB_HOST
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-projects-host
+                  key: qa-mic-db-projects-host
             - name: API_NATS_URL
               value: "nats://nats-svc:4222"
             - name: API_NATS_CLIENT_ID
@@ -72,7 +72,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-projects-url
+                  key: qa-mic-db-projects-url
           command: ["migrate"]
           args:
             ["-path", "/migrations", "-verbose", "-database", "$(DB_URL)", "up"]

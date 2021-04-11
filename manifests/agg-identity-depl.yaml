@@ -35,12 +35,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: view-db-identity-url
+                  key: qa-view-db-identity-url
             - name: NATS_DB_URL
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: msg-db-nats-url
+                  key: qa-msg-db-nats-url
       initContainers:
         - name: schema-migration
           image: devpies/view-db-identity-migration:v000002
@@ -49,7 +49,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: view-db-identity-url
+                  key: qa-view-db-identity-url
           command: ["migrate"]
           args:
             ["-path", "/migrations", "-verbose", "-database", "$(DB_URL)", "up"]

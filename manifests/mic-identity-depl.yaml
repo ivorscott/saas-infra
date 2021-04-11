@@ -34,22 +34,22 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-identity-database-name
+                  key: qa-mic-db-identity-database-name
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-identity-username
+                  key: qa-mic-db-identity-username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-identity-password
+                  key: qa-mic-db-identity-password
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-identity-host
+                  key: qa-mic-db-identity-host
       initContainers:
         - name: schema-migration
           image: devpies/mic-db-identity-migration:v000003
@@ -58,7 +58,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: mic-db-identity-url
+                  key: qa-mic-db-identity-url
           command: ["migrate"]
           args:
             ["-path", "/migrations", "-verbose", "-database", "$(DB_URL)", "up"]

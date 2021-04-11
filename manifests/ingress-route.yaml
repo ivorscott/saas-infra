@@ -9,9 +9,8 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(`devpie.io`)
-    kind: Rule
-    services:
-      - name: service-2048
-        port: 80
-
+    - match: Host(`devpie.io`)
+      kind: Rule
+      services:
+        - name: service-2048
+          port: 80

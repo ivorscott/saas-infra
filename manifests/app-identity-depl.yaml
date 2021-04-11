@@ -43,7 +43,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: view-db-identity-url
+                  key: qa-view-db-identity-url
             - name: AUTH0_DOMAIN
               valueFrom:
                 secretKeyRef:
@@ -62,7 +62,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: view-db-identity-url
+                  key: qa-view-db-identity-url
           command: ["migrate"]
           args:
             ["-path", "/migrations", "-verbose", "-database", "$(DB_URL)", "up"]

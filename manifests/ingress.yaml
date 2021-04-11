@@ -13,7 +13,7 @@ metadata:
     app: traefik
 spec:
   rules:
-    - host: devpie.io
+    - host: qa.devpie.io
       http:
         paths:
           # HTTP to HTTPS redirect entry
