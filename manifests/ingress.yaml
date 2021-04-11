@@ -13,7 +13,7 @@ metadata:
     app: traefik
 spec:
   rules:
-    - host: arn:aws:acm:eu-central-1:554897346438:certificate/5669f545-84d7-42fe-aeef-a51a38a70d5c
+    - host: qa.devpie.io
       http:
         paths:
           # HTTP to HTTPS redirect entry
