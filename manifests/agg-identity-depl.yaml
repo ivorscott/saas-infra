@@ -13,7 +13,7 @@ spec:
         app: agg-identity
     spec:
       containers:
-        - image: devpies/agg-identity:latest
+        - image: devpies/agg-identity:5591bd0
           name: agg-identity
           resources:
             requests:
