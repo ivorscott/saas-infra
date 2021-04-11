@@ -12,7 +12,7 @@ spec:
         app: mic-identity
     spec:
       containers:
-        - image: devpies/mic-identity:latest
+        - image: devpies/mic-identity:5591bd0
           name: mic-identity
           resources:
             requests:
