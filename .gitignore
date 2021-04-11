@@ -8,3 +8,4 @@ kubeconfig_eks-*
 kubeconfig
 patch.sh
 secrets.yaml
+secrets-ghcr.yaml
