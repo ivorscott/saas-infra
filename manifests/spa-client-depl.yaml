@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spa-client-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spa-client
+  template:
+    metadata:
+      labels:
+        app: spa-client
+    spec:
+      containers:
+        - image: devpies/spa-client:latest
+          name: spa-client
+          stdin: true
+          tty: true
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "100Mi"
+            limits:
+              cpu: "250m"
+              memory: "250Mi"
+          env:
+            - name: PORT
+              value: "80"
+            - name: REACT_APP__BACKEND
+              value: "https://client-backend.devpie.local/v1"
+            - name: REACT_APP__FRESHBOOKS_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: freshbooks-client-id
+            - name: REACT_APP__FRESHBOOKS_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: freshbooks-client-secret
+            - name: REACT_APP__AWS_COGNITO_IDENTITY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws-cognito-identity
+            - name: REACT_APP__AWS_REGION
+              value: "eu-central-1"
+            - name: REACT_APP__AWS_S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws-s3-bucket
+            - name: REACT_APP__AUTH0_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: auth0-domain
+            - name: REACT_APP__AUTH0_AUDIENCE
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: auth0-audience
+            - name: REACT_APP__AUTH0_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: auth0-client-id
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spa-client-svc
+spec:
+  selector:
+    app: spa-client
+  ports:
+    - port: 80
+      targetPort: 80
