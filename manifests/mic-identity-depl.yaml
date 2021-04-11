@@ -11,8 +11,10 @@ spec:
       labels:
         app: mic-identity
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
-        - image: devpies/mic-identity:5591bd0
+        - image: ghcr.io/devpies/mic-identity:5591bd0
           name: mic-identity
           resources:
             requests:

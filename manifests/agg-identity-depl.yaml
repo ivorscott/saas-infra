@@ -12,8 +12,10 @@ spec:
       labels:
         app: agg-identity
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
-        - image: devpies/agg-identity:5591bd0
+        - image: ghcr.io/devpies/agg-identity:5591bd0
           name: agg-identity
           resources:
             requests:

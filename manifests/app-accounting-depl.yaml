@@ -12,8 +12,10 @@ spec:
       labels:
         app: app-accounting
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
-        - image: devpies/app-accounting:5591bd0
+        - image: ghcr.io/devpies/app-accounting:5591bd0
           name: app-accounting
           resources:
             requests:
