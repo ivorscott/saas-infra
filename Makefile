@@ -18,6 +18,7 @@ build:
 
 up:
 	$(kconfig) kubectl apply -f ./manifests/secrets.yaml
+	$(kconfig) kubectl apply -f ./manifests/secrets-ghcr.yaml
 	./setup_ingress.sh $(shell terraform output -raw acm_cert_arn) qa.$(hostname)
 	$(kconfig) kubectl apply -f ./manifests/deployment.yaml -f ./manifests/traefik.yaml -f ./manifests/ingress.yaml
 	$(kconfig) kubectl apply -f ./manifests/ingress-route.yaml

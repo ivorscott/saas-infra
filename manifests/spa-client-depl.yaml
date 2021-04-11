@@ -12,6 +12,8 @@ spec:
       labels:
         app: spa-client
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
         - image: devpies/spa-client:61a8fea
           name: spa-client
