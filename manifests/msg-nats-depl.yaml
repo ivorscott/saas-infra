@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msg-nats-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+        - name: nats
+          image: nats-streaming:0.19.0-alpine3.12
+          env:
+            - name: MSG_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: msg-db-nats-username
+            - name: MSG_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: msg-db-nats-password
+            - name: MSG_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: msg-db-nats-database-name
+            - name: MSG_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: msg-db-nats-host
+            - name: MSG_DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: msg-db-nats-port
+          args: [
+              "-mc",
+              "0",
+              "-st",
+              "sql",
+              "-sql_driver",
+              "postgres",
+              "-sql_source",
+              "user=$(MSG_DB_USER) password=$(MSG_DB_PASSWORD) dbname=$(MSG_DB_NAME) host=$(MSG_DB_HOST) port=$(MSG_DB_PORT) readTimeout=5s writeTimeout=5s sslmode=require",
+              "-p", # Use port for clients (default: 4222)
+              "4222",
+              "-m", # Use port for http monitoring (default: 8222)
+              "8222",
+              "-hbi", # Interval at which server sends heartbeat to a client
+              "5s",
+              "-hbt", # How long server waits for a heartbeat response
+              "5s",
+              "-hbf", # Number of failed heartbeats before server closes the client connection
+              "2",
+              "-SDV", # Enable STAN debugging output and tracing
+              "-cid", # Cluster ID (default: test-cluster)
+              "devpie-client",
+            ]
+      initContainers:
+        - name: schema-migration
+          image: devpies/msg-db-migration:v000002
+          env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: msg-db-nats-url
+          command: ["migrate"]
+          args:
+            ["-path", "/migrations", "-verbose", "-database", "$(DB_URL)", "up"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-svc
+spec:
+  selector:
+    app: nats
+  ports:
+    - name: client
+      port: 4222
+    - name: monitoring
+      port: 8222
