@@ -20,27 +20,27 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: msg-db-nats-username
+                  key: qa-msg-db-nats-username
             - name: MSG_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: msg-db-nats-password
+                  key: qa-msg-db-nats-password
             - name: MSG_DB_NAME
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: msg-db-nats-database-name
+                  key: qa-msg-db-nats-database-name
             - name: MSG_DB_HOST
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: msg-db-nats-host
+                  key: qa-msg-db-nats-host
             - name: MSG_DB_PORT
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: msg-db-nats-port
+                  key: qa-msg-db-nats-port
           args: [
               "-mc",
               "0",
@@ -72,7 +72,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: msg-db-nats-url
+                  key: qa-msg-db-nats-url
           command: ["migrate"]
           args:
             ["-path", "/migrations", "-verbose", "-database", "$(DB_URL)", "up"]
