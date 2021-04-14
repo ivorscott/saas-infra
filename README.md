@@ -1,8 +1,25 @@
-# EKS (Amazon Elastic Kubernetes Service)
+# devpie-client-infra
 
-## Quick Start
+contents:
 
-Make sure you have an AWS account and a domain name in a route53 hosted zone, then run:
+- vpc
+- kubernetes config
+- kubernetes manifests
+- aws load balancer controller
+- external-dns
+- iam roles for service accounts
+- acm tls termination
+- auth0
+
+## getting started
+
+### requirements
+
+- aws account
+- aws route53 hosted zone
+- existing domain name in hosted zone
+- €167 per month / €2000 per year
+  [estimate](https://calculator.aws/#/estimate?id=b2ae440701117b8abaa15a5c7a6784f1b3002e6e)
 
 ```bash
 # create
@@ -12,77 +29,19 @@ make apply hostname=example.com hosted_zone_id=xxxxxxxxxxxxxx
 make destroy
 ```
 
-Optionally, you can create the following environment variables in an .env file in the root folder
+optionally, you can create the following environment variables in an .env file in the root folder
 
 ```bash
 ENV_HOSTNAME=example.com
 ENV_ZONE_ID=xxxxxxxxxxxxxx
 ```
 
-## Description
+### references
 
-This example shows how to use the Terraform Kubernetes Provider and Terraform Helm Provider to configure an EKS cluster. The example config builds the EKS cluster and applies the Kubernetes configurations in a single operation. This guide will also show you how to make changes to the underlying EKS cluster in such a way that Kuberntes/Helm resources are recreated after the underlying cluster is replaced.
+- [terraform-provider-kubernetes](https://github.com/hashicorp/terraform-provider-kubernetes/tree/main/_examples/eks) inspiration
 
-You will need the following environment variables to be set:
+- [aws load balancer controller, acm, external-dns, and traefik](https://revolgy.com/blog/advanced-api-routing-in-eks-with-traefik-aws-loadbalancer-controller-and-external-dns/) inspiration
 
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-- `TF_VAR_domain_names`
+- [argo cd](https://argoproj.github.io/argo-cd/getting_started/) deployment detects changes in this repository
 
-See [AWS Provider docs](https://www.terraform.io/docs/providers/aws/index.html#configuration-reference) for more details about these variables and alternatives, like `AWS_PROFILE`.
-
-Ensure that `KUBE_CONFIG_FILE` and `KUBE_CONFIG_FILES` environment variables are NOT set, as they will interfere with the cluster build.
-
-```
-unset KUBE_CONFIG_FILE
-unset KUBE_CONFIG_FILES
-```
-
-To install the EKS cluster using default values, run terraform init and apply from the directory containing this README.
-
-```
-terraform init
-terraform apply -var hostname="example.com" -var hosted_zone_id="xxxxxxxxxxxxxx"
-```
-
-## Kubeconfig for manual CLI access
-
-This example generates a kubeconfig file in the current working directory. However, the token in this config expires in 15 minutes. The token can be refreshed by running `terraform apply` again. Export the KUBECONFIG to manually access the cluster:
-
-```
-terraform apply
-export KUBECONFIG=$(terraform output -raw kubeconfig_path)
-```
-
-## Optional variables
-
-The Kubernetes version can be specified at apply time:
-
-```
-terraform apply -var=kubernetes_version=1.18
-```
-
-See https://docs.aws.amazon.com/eks/latest/userguide/platform-versions.html for currently available versions.
-
-### Worker node count and instance type
-
-The number of worker nodes, and the instance type, can be specified at apply time:
-
-```
-terraform apply -var=workers_count=4 -var=workers_type=m4.xlarge
-```
-
-## Additional configuration of EKS
-
-To view all available configuration options for the EKS module used in this example, see [terraform-aws-modules/eks docs](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest).
-
-## Replacing the EKS cluster and re-creating the Kubernetes / Helm resources
-
-When the cluster is initially created, the Kubernetes and Helm providers will not be initialized until authentication details are created for the cluster. However, for future operations that may involve replacing the underlying cluster (for example, changing the network where the EKS cluster resides), the EKS cluster will have to be targeted without the Kubernetes/Helm providers, as shown below. This is done by removing the `module.kubernetes-config` from Terraform State prior to replacing cluster credentials, to avoid passing outdated credentials into the providers.
-
-This will create the new cluster and the Kubernetes resources in a single apply.
-
-```
-terraform state rm module.kubernetes-config
-terraform apply
-```
+- [devpie-client-core github workflows](https://github.com/devpies/devpie-client-core/tree/main/.github/workflows) clone this repository and updates manifests with new image tag
