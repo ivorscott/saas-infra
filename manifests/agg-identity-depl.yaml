@@ -15,7 +15,7 @@ spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: ghcr.io/devpies/agg-identity:3536d1a
+        - image: ghcr.io/devpies/agg-identity:439ba9d
           name: agg-identity
           resources:
             requests:
