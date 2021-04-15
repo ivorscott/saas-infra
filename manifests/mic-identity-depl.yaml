@@ -14,7 +14,7 @@ spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: ghcr.io/devpies/mic-identity:50bf04e
+        - image: ghcr.io/devpies/mic-identity:b1cba09
           name: mic-identity
           resources:
             requests:
