@@ -15,7 +15,7 @@ spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: ghcr.io/devpies/app-accounting:32fb3c1
+        - image: ghcr.io/devpies/app-accounting:a442d75
           name: app-accounting
           resources:
             requests:
