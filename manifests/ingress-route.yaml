@@ -22,7 +22,7 @@ spec:
     - match: Host(`qa.devpie.io`) && PathPrefix(`/api/v1/users`)
       kind: Rule
       services:
-        - name: app-identity-svc
+        - name: mic-users-svc
           port: 4000
     - match: Host(`qa.devpie.io`) && PathPrefix(`/api/v1/accounting`)
       kind: Rule
