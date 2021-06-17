@@ -15,7 +15,7 @@ spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: ghcr.io/devpies/spa-client:dbb9d28
+        - image: ghcr.io/devpies/spa-client:db40319
           name: spa-client
           stdin: true
           tty: true
