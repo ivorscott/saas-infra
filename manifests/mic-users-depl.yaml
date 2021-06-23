@@ -12,7 +12,7 @@ spec:
         app: mic-users
     spec:
       containers:
-        - image: ghcr.io/devpies/mic-users:2d92a7e
+        - image: ghcr.io/devpies/mic-users:38e8d8b
           name: mic-users
           resources:
             requests:
