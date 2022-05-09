@@ -1,4 +1,4 @@
-# devpie infrastructure
+# Infrastructure
 
 contents:
 
