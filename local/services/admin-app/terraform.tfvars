@@ -1,0 +1,5 @@
+profile  = "ivorscott"
+region  = "eu-central-1"
+stage   = "local"
+elb_url = "localhost"
+email   = "ivor@devpie.io"
