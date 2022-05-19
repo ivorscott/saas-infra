@@ -1,3 +1,0 @@
-# Postgres 
-
-Staging infrastructure

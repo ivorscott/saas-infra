@@ -1,3 +1,0 @@
-# Client app 
-
-Staging infrastructure

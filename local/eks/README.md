@@ -1,3 +1,0 @@
-# EKS 
-
-Staging infrastructure

@@ -1,3 +1,0 @@
-# DynamoDB 
-
-Staging infrastructure

@@ -6,7 +6,7 @@ data "aws_caller_identity" "current" {}
 
 # Setup Cognito Admin UserPool + Invitation Email
 resource "aws_cognito_user_pool" "pool" {
-  name = "AdminUserPool"
+  name = "AdminUserPool-${var.stage}"
 
   admin_create_user_config {
     allow_admin_create_user_only = true
@@ -29,15 +29,14 @@ EOF
 
 # Setup Cognito UserPoolDomain
 resource "aws_cognito_user_pool_domain" "main" {
-  domain       = "${var.stage}-admin-pool-${data.aws_caller_identity.current.account_id}"
+  domain       = "admin-pool-${data.aws_caller_identity.current.account_id}-${var.stage}"
   #certificate_arn = aws_acm_certificate.cert.arn
   user_pool_id = aws_cognito_user_pool.pool.id
 }
 
 # Setup Cognito UserPoolClient
-
 resource "aws_cognito_user_pool_client" "client" {
-  name = "AdminUserPoolClient"
+  name = "AdminUserPoolClient-${var.stage}"
 
   user_pool_id = aws_cognito_user_pool.pool.id
 
