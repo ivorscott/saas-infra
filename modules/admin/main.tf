@@ -15,7 +15,7 @@ resource "aws_cognito_user_pool" "pool" {
       email_message = <<EOF
       <b>Welcome to DevPie Admin</b> <br>
       <br>
-      You can log into the app <a href="http://${var.elb_url}/admin">here</a>.
+      You can log into the app <a href="http://localhost:4000/login">here</a>.
       <br>
       Your username is: <b>{username}</b>
       <br>
@@ -44,7 +44,7 @@ resource "aws_cognito_user_pool_client" "client" {
   explicit_auth_flows = ["ALLOW_ADMIN_USER_PASSWORD_AUTH", "ALLOW_CUSTOM_AUTH", "ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
   allowed_oauth_flows = ["code", "implicit"]
   allowed_oauth_scopes = ["email", "openid", "phone", "profile"]
-  callback_urls = ["http://localhost/admin", "https://${var.elb_url}/admin"]
+  callback_urls = ["http://localhost:4001/auth-challenge"]
   prevent_user_existence_errors = "ENABLED"
 }
 

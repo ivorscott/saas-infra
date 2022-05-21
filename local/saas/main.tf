@@ -22,15 +22,15 @@ module "admin" {
   admin_email_address = var.email
 }
 
-module "baseline" {
-  source = "../../modules/baseline"
+#module "baseline" {
+#  source = "../../modules/baseline"
+#
+#  stage         = var.stage
+#}
 
-  stage         = var.stage
-}
-
-module "tenant" {
-  source = "../../modules/tenant"
-
-  stage         = var.stage
-  elb_url             = var.elb_url
-}
+#module "tenant" {
+#  source = "../../modules/tenant"
+#
+#  stage         = var.stage
+#  elb_url             = var.elb_url
+#}
