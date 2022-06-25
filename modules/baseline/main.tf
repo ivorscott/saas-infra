@@ -1,14 +1,14 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.1.9"
+  required_version = ">= 0.15.5, <= 1.2.3"
 }
 
-# Create Tenant Table
-resource "aws_dynamodb_table" "tenant" {
-  name = "Tenant-${var.stage}"
-  hash_key = "tenant_id"
+# Create tenants Table
+resource "aws_dynamodb_table" "tenants" {
+  name = "tenants"
+  hash_key = "tenantId"
 
   attribute {
-    name = "tenant_id"
+    name = "tenantId"
     type = "S"
   }
 
@@ -17,13 +17,13 @@ resource "aws_dynamodb_table" "tenant" {
   write_capacity = 5
 }
 
-# Create AuthInfo Table
+# Create auth-info table
 resource "aws_dynamodb_table" "auth_info" {
-  name = "AuthInfo-${var.stage}"
-  hash_key = "tenant_path"
+  name = "auth-info"
+  hash_key = "tenantPath"
 
   attribute {
-    name = "tenant_path"
+    name = "tenantPath"
     type = "S"
   }
 
@@ -32,29 +32,13 @@ resource "aws_dynamodb_table" "auth_info" {
   write_capacity = 5
 }
 
-# Create Metadata Table
-resource "aws_dynamodb_table" "metadata" {
-  name = "Metadata-${var.stage}"
-  hash_key = "name"
+# Create silo-config table
+resource "aws_dynamodb_table" "silo_config" {
+  name = "silo-config"
+  hash_key = "tenantName"
 
   attribute {
-    name = "name"
-    type = "S"
-  }
-
-  billing_mode = "PROVISIONED"
-  read_capacity = 5
-  write_capacity = 5
-}
-
-
-# Create Tenant Mapping Table
-resource "aws_dynamodb_table" "tenant_mapping" {
-  name = "Tenant-Mapping-${var.stage}"
-  hash_key = "tenant_name"
-
-  attribute {
-    name = "tenant_name"
+    name = "tenantName"
     type = "S"
   }
 

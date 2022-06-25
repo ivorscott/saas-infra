@@ -18,7 +18,8 @@ variable "email" {
   type = string
 }
 
-variable "elb_url" {
-  description = "The AWS Elastic Load Balancer URL."
+variable "hostname" {
+  description = "The SaaS hostname."
+  default = "example.com"
   type = string
 }

@@ -3,3 +3,6 @@
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfvars
+secrets-ghcr.yaml
+secrets.yaml
+.env

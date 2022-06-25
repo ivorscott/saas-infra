@@ -1,12 +1,12 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.1.9"
+  required_version = ">= 0.15.5, <= 1.2.3"
 }
 
 data "aws_caller_identity" "current" {}
 
 # Setup Cognito Admin UserPool + Invitation Email
 resource "aws_cognito_user_pool" "pool" {
-  name = "AdminUserPool-${var.stage}"
+  name = "${var.stage}-AdminUserPool"
 
   admin_create_user_config {
     allow_admin_create_user_only = true
@@ -15,7 +15,7 @@ resource "aws_cognito_user_pool" "pool" {
       email_message = <<EOF
       <b>Welcome to DevPie Admin</b> <br>
       <br>
-      You can log into the app <a href="http://localhost:4000/login">here</a>.
+      You can log into the app <a href="https://admin.${var.hostname}">here</a>.
       <br>
       Your username is: <b>{username}</b>
       <br>
@@ -29,14 +29,14 @@ EOF
 
 # Setup Cognito UserPoolDomain
 resource "aws_cognito_user_pool_domain" "main" {
-  domain       = "admin-pool-${data.aws_caller_identity.current.account_id}-${var.stage}"
+  domain       = "${var.stage}-admin-pool-${data.aws_caller_identity.current.account_id}"
   #certificate_arn = aws_acm_certificate.cert.arn
   user_pool_id = aws_cognito_user_pool.pool.id
 }
 
 # Setup Cognito UserPoolClient
 resource "aws_cognito_user_pool_client" "client" {
-  name = "AdminUserPoolClient-${var.stage}"
+  name = "${var.stage}-AdminUserPoolClient"
 
   user_pool_id = aws_cognito_user_pool.pool.id
 

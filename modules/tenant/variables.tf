@@ -1,5 +1,6 @@
-variable "elb_url" {
-  description = "The elastic load balancer url."
+variable "hostname" {
+  description = "The SaaS hostname."
+  default = "example.com"
   type = string
 }
 

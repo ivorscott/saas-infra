@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.1.9"
+  required_version = ">= 0.15.5, <= 1.2.3"
 
   required_providers {
     aws = {
@@ -16,21 +16,13 @@ provider "aws" {
 
 module "admin" {
   source = "../../modules/admin"
-
   stage               = var.stage
-  elb_url             = var.elb_url
+  hostname             = var.hostname
   admin_email_address = var.email
 }
 
-#module "baseline" {
-#  source = "../../modules/baseline"
-#
-#  stage         = var.stage
-#}
-
-#module "tenant" {
-#  source = "../../modules/tenant"
-#
-#  stage         = var.stage
-#  elb_url             = var.elb_url
-#}
+module "tenant" {
+  source = "../../modules/tenant"
+  stage         = var.stage
+  hostname      = var.hostname
+}

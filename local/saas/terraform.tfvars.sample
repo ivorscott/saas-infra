@@ -1,5 +1,5 @@
 profile  = ""
 region  = "eu-central-1"
 stage   = "local"
-elb_url = "localhost:4000"
+hostname = "devpie.local"
 email   = ""

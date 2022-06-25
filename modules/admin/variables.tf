@@ -3,8 +3,9 @@ variable "admin_email_address" {
   type = string
 }
 
-variable "elb_url" {
-  description = "The Elastic Load Balancer URL associated with the EKS cluster."
+variable "hostname" {
+  description = "The SaaS hostname."
+  default = "example.com"
   type = string
 }
 
