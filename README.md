@@ -28,11 +28,12 @@
 ### Setup
 1. Navigate to desired SaaS environment `local/saas`, `dev/saas` etc.
 2. Create you own `terraform.tfvars` file from the sample.
+
 ```
 profile  = ""
 region  = "eu-central-1"
 stage   = "local"
-hostname = "localhost:4000"
+hostname = "devpie.local"
 email   = ""
 ```
 
