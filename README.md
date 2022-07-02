@@ -2,7 +2,7 @@
 
 > __USE AT YOUR OWN RISK.__ 
 > 
->  The `local` stage is the cheapest, it only provisions AWS Cognito. 
+>  The `local` stage is the cheapest, it only provisions AWS Cognito and DynamoDB tables. 
 > - Configure a billing alarm on your AWS account to protect yourself against large unexpected bills.
 > - Always destroy unused environments with `terraform destroy` to reduce costs.
 > 
