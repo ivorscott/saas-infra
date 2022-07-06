@@ -1,20 +1,6 @@
 # Infra
 
-> __USE AT YOUR OWN RISK.__ 
-> 
->  The `local` stage is the cheapest, it only provisions AWS Cognito and DynamoDB tables. 
-> - Configure a billing alarm on your AWS account to protect yourself against large unexpected bills.
-> - Always destroy unused environments with `terraform destroy` to reduce costs.
-> 
->The `dev` stage will provision an 
->1) EKS cluster
->2) Three DynamoDB tables
->3) Three RDS Postgres
->instances
->4) A Code Pipeline, and more.
->
-> Be careful. Read through the code. Charges may apply even on the AWS Free Tier. 
-> 
+Multi-tenant SaaS app built on AWS
 
 ## Getting Started
 
