@@ -12,7 +12,7 @@ spec:
         app: mic-tenant
     spec:
       containers:
-        - image: tenant:latest
+        - image: tenant:4c28753
           name: mic-tenant
           ports:
             - containerPort: 4002
