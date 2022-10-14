@@ -12,7 +12,7 @@ spec:
         app: mic-registration
     spec:
       containers:
-        - image: registration:latest
+        - image: registration:f30e093
           name: mic-registration
           ports:
             - containerPort: 4001
