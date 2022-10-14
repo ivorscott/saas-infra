@@ -11,8 +11,10 @@ spec:
       labels:
         app: mic-tenant
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
-        - image: tenant:4c28753
+        - image: ghcr.io/devpies/tenant:latest
           name: mic-tenant
           ports:
             - containerPort: 4002

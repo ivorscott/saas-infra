@@ -11,8 +11,10 @@ spec:
       labels:
         app: mic-admin
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
-        - image: admin:40cabcd
+        - image: ghcr.io/devpies/admin:latest
           name: mic-admin
           ports:
             - containerPort: 4000

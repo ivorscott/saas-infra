@@ -11,8 +11,10 @@ spec:
       labels:
         app: mic-project
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
-        - image: project:41d4419
+        - image: ghcr.io/devpies/project:latest
           name: mic-project
           ports:
             - containerPort: 4004

@@ -11,8 +11,10 @@ spec:
       labels:
         app: mic-user
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
-        - image: user:989d96d
+        - image: ghcr.io/devpies/user:latest
           name: mic-user
           ports:
             - containerPort: 4005

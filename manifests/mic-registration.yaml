@@ -11,8 +11,10 @@ spec:
       labels:
         app: mic-registration
     spec:
+      imagePullSecrets:
+        - name: ghcr-auth
       containers:
-        - image: registration:f30e093
+        - image: ghcr.io/devpies/registration:latest
           name: mic-registration
           ports:
             - containerPort: 4001
