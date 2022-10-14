@@ -12,7 +12,7 @@ spec:
         app: mic-project
     spec:
       containers:
-        - image: project:latest
+        - image: project:41d4419
           name: mic-project
           ports:
             - containerPort: 4004
