@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mic-registration
+spec:
+  selector:
+    matchLabels:
+      app: mic-registration
+  template:
+    metadata:
+      labels:
+        app: mic-registration
+    spec:
+      containers:
+        - image: registration:latest
+          name: mic-registration
+          ports:
+            - containerPort: 4001
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_secret_access_key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: REGISTRATION_WEB_PORT
+              value: "4001"
+            - name: REGISTRATION_COGNITO_USER_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: admin_user_pool_id
+            - name: REGISTRATION_COGNITO_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: REGISTRATION_DYNAMODB_AUTH_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: dynamodb_auth_info_table_name
+            - name: REGISTRATION_NATS_ADDRESS
+              value: "nats-svc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mic-registration-svc
+spec:
+  selector:
+    app: mic-registration
+  ports:
+    - port: 4001
+      targetPort: 4001

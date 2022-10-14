@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mic-project
+spec:
+  selector:
+    matchLabels:
+      app: mic-project
+  template:
+    metadata:
+      labels:
+        app: mic-project
+    spec:
+      containers:
+        - image: project:latest
+          name: mic-project
+          ports:
+            - containerPort: 4004
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_secret_access_key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: PROJECT_WEB_PORT
+              value: "4004"
+            - name: PROJECT_COGNITO_USER_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: shared_user_pool_id
+            - name: PROJECT_COGNITO_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: PROJECT_NATS_ADDRESS
+              value: "nats-svc"
+            - name: PROJECT_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_hostname_projects
+            - name: PROJECT_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_username_projects
+            - name: PROJECT_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_password_projects
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mic-project-svc
+spec:
+  selector:
+    app: mic-project
+  ports:
+    - port: 4004
+      targetPort: 4004

@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mic-user
+spec:
+  selector:
+    matchLabels:
+      app: mic-user
+  template:
+    metadata:
+      labels:
+        app: mic-user
+    spec:
+      containers:
+        - image: user:latest
+          name: mic-user
+          ports:
+            - containerPort: 4005
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_secret_access_key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: USER_WEB_PORT
+              value: "4005"
+            - name: USER_COGNITO_SHARED_USER_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: shared_user_pool_id
+            - name: USER_COGNITO_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: USER_NATS_ADDRESS
+              value: "nats-svc"
+            - name: USER_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_hostname_users
+            - name: USER_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_username_users
+            - name: USER_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_password_users
+            - name: USER_DYNAMODB_CONNECTION_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: dynamodb_connections_table_name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mic-user-svc
+spec:
+  selector:
+    app: mic-user
+  ports:
+    - port: 4005
+      targetPort: 4005

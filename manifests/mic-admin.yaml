@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mic-admin
+spec:
+  selector:
+    matchLabels:
+      app: mic-admin
+  template:
+    metadata:
+      labels:
+        app: mic-admin
+    spec:
+      containers:
+        - image: admin:latest
+          name: mic-admin
+          ports:
+            - containerPort: 4000
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_secret_access_key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: ADMIN_WEB_PORT
+              value: "4000"
+            - name: ADMIN_COGNITO_USER_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: admin_user_pool_id
+            - name: ADMIN_COGNITO_USER_POOL_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: admin_user_pool_client_id
+            - name: ADMIN_COGNITO_SHARED_USER_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: shared_user_pool_id
+            - name: ADMIN_COGNITO_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: ADMIN_REGISTRATION_SERVICE_ADDRESS
+              value: "mic-registration-svc"
+            - name: ADMIN_REGISTRATION_SERVICE_PORT
+              value: "4001"
+            - name: ADMIN_TENANT_SERVICE_ADDRESS
+              value: "mic-tenant-svc"
+            - name: ADMIN_TENANT_SERVICE_PORT
+              value: "4002"
+            - name: ADMIN_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_hostname_admin
+            - name: ADMIN_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_username_admin
+            - name: ADMIN_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: db_password_admin
+            - name: ADMIN_DYNAMODB_TENANT_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: dynamodb_tenants_table_name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mic-admin-svc
+spec:
+  selector:
+    app: mic-admin
+  ports:
+    - port: 4000
+      targetPort: 4000

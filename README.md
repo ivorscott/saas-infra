@@ -26,7 +26,22 @@ email   = ""
 3. Provision infrastructure for your environment.
 
 ```bash
+terraform init
 terraform apply
+```
+
+4. For `dev/saas`, register the app of apps with `argocd`.
+
+```
+argocd app create dev-apps \
+    --dest-namespace argocd  \
+    --dest-server https://kubernetes.default.svc  \
+    --repo https://github.com/devpies/saas-infra.git \
+    --path "manifests"
+```
+5. Then sync (deploy) the apps.
+```
+argocd app sync dev-apps 
 ```
 
 ### References

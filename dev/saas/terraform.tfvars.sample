@@ -1,0 +1,5 @@
+profile  = ""
+region  = "eu-central-1"
+stage   = "local"
+hostname = "devpie.local"
+email   = ""

@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mic-tenant
+spec:
+  selector:
+    matchLabels:
+      app: mic-tenant
+  template:
+    metadata:
+      labels:
+        app: mic-tenant
+    spec:
+      containers:
+        - image: tenant:latest
+          name: mic-tenant
+          ports:
+            - containerPort: 4002
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_secret_access_key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: TENANT_WEB_PORT
+              value: "4002"
+            - name: TENANT_COGNITO_USER_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: admin_user_pool_id
+            - name: TENANT_COGNITO_SHARED_USER_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: shared_user_pool_id
+            - name: TENANT_COGNITO_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: TENANT_DYNAMODB_TENANT_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: dynamodb_tenants_table_name
+            - name: TENANT_DYNAMODB_AUTH_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: dynamodb_auth_info_table_name
+            - name: TENANT_DYNAMODB_CONFIG_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: dynamodb_silo_config_table_name
+            - name: TENANT_DYNAMODB_CONNECTION_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: dynamodb_connections_table_name
+            - name: TENANT_NATS_ADDRESS
+              value: "nats-svc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mic-tenant-svc
+spec:
+  selector:
+    app: mic-tenant
+  ports:
+    - port: 4002
+      targetPort: 4002
