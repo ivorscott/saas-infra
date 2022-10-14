@@ -12,7 +12,7 @@ spec:
         app: mic-admin
     spec:
       containers:
-        - image: admin:latest
+        - image: admin:40cabcd
           name: mic-admin
           ports:
             - containerPort: 4000
