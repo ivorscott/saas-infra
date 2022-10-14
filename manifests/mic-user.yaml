@@ -12,7 +12,7 @@ spec:
         app: mic-user
     spec:
       containers:
-        - image: user:latest
+        - image: user:e923eb7
           name: mic-user
           ports:
             - containerPort: 4005
