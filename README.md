@@ -13,7 +13,7 @@ Multi-tenant SaaS app built on AWS
 
 ### Setup
 1. Navigate to desired SaaS environment `local/saas`, `dev/saas` etc.
-2. Create you own `terraform.tfvars` file from the sample.
+2. Create you own `terraform.tfvars` file from the sample. For example:
 
 ```
 profile  = ""
@@ -23,25 +23,12 @@ hostname = "devpie.local"
 email   = ""
 ```
 
-3. Provision infrastructure for your environment.
+3. Provision infrastructure for your desired environment.
 
 ```bash
-terraform init
-terraform apply
-```
-
-4. For `dev/saas`, register the app of apps with `argocd`.
-
-```
-argocd app create dev-apps \
-    --dest-namespace argocd  \
-    --dest-server https://kubernetes.default.svc  \
-    --repo https://github.com/devpies/saas-infra.git \
-    --path "manifests"
-```
-5. Then sync (deploy) the apps.
-```
-argocd app sync dev-apps 
+make local
+# or
+make dev
 ```
 
 ### References

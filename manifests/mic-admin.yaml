@@ -67,18 +67,18 @@ spec:
             - name: ADMIN_DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_hostname_admin
+                  name: postgres_secrets
+                  key: postgres_hostname_admin
             - name: ADMIN_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_username_admin
+                  name: postgres_secrets
+                  key: postgres_username_admin
             - name: ADMIN_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_password_admin
+                  name: postgres_secrets
+                  key: postgres_password_admin
             - name: ADMIN_DYNAMODB_TENANT_TABLE
               valueFrom:
                 configMapKeyRef:

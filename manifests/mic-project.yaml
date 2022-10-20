@@ -51,18 +51,18 @@ spec:
             - name: PROJECT_DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_hostname_projects
+                  name: postgres_secrets
+                  key: postgres_hostname_projects
             - name: PROJECT_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_username_projects
+                  name: postgres_secrets
+                  key: postgres_username_projects
             - name: PROJECT_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_password_projects
+                  name: postgres_secrets
+                  key: postgres_password_projects
 ---
 apiVersion: v1
 kind: Service

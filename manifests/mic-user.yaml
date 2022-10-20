@@ -51,18 +51,18 @@ spec:
             - name: USER_DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_hostname_users
+                  name: postgres_secrets
+                  key: postgres_hostname_users
             - name: USER_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_username_users
+                  name: postgres_secrets
+                  key: postgres_username_users
             - name: USER_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: secrets
-                  key: db_password_users
+                  name: postgres_secrets
+                  key: postgres_password_users
             - name: USER_DYNAMODB_CONNECTION_TABLE
               valueFrom:
                 configMapKeyRef:

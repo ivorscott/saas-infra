@@ -3,30 +3,36 @@ include .env
 # default arguments
 hostname ?= devpie.io
 
-init:
-	terraform init
-.PHONY: init
+local:
+	terraform -chdir="./local/saas" init
+	terraform -chdir="./local/saas" apply
+.PHONY: local
 
-build:
-	terraform apply \
+dev:
+	terraform -chdir="./dev/saas" init
+	terraform -chdir="./dev/saas" apply
+
+	terraform -chdir="./dev/eks" init
+	terraform -chdir="./dev/eks" apply \
 	-var eks_cluster_domain      = "$(hostname)" \
-    -var acm_certificate_domain  = "*.$(hostname)"
-.PHONY: build
+	-var acm_certificate_domain  = "*.$(hostname)"
 
-up:
-	kubectl apply -f ./manifests
-.PHONY: up
+	argocd app create dev-apps \
+		--dest-namespace argocd  \
+		--dest-server https://kubernetes.default.svc  \
+		--repo https://github.com/devpies/saas-infra.git \
+		--path "manifests"
 
-down:
-	kubectl delete -f ./manifests
-.PHONY: down
+	argocd app sync dev-apps
+.PHONY: dev
 
-apply: init build up
-.PHONY: apply
+delete:
+	argocd app delete dev-apps --cascade
+.PHONY: delete
 
-destroy: down
-	terraform destroy \
+destroy: delete
+	terraform -chdir="./dev/saas" destroy -auto-approve
+	terraform -chdir="./dev/eks" destroy \
 	-var eks_cluster_domain="" \
-	-var acm_certificate_domain="" \
-	-auto-approve
+	-var acm_certificate_domain="" -auto-approve
 .PHONY: destroy
