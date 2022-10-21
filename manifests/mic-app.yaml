@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mic-app
+  name: mic-spa
 spec:
   selector:
     matchLabels:
-      app:efd36f2
+      app: mic-spa
   template:
     metadata:
       labels:
-        app:efd36f2
+        app: mic-spa
     spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: ghcr.io/devpies/app:efd36f2
-          name: mic-app
+        - image: ghcr.io/devpies/spa:efd36f2
+          name: mic-spa
           ports:
             - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mic-app-svc
+  name: mic-spa-svc
 spec:
   selector:
-    app:efd36f2
+    app: mic-spa
   ports:
     - port: 80
       targetPort: 80

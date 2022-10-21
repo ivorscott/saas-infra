@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.2.3"
+  required_version = ">= 0.15.5, <= 1.3.3"
 }
 
 # Setup Cognito Application UserPool + Invitation Email
@@ -13,7 +13,7 @@ resource "aws_cognito_user_pool" "pool" {
       email_message = <<EOF
       <b>Welcome to DevPie</b> <br>
       <br>
-      You can log into the app <a href="https://${var.hostname}/manage/projects">here</a>.
+      You can log into the app <a href="https://${var.stage}.${var.hostname}/manage/projects">here</a>.
       <br>
       Your username is: <b>{username}</b>
       <br>
@@ -53,6 +53,13 @@ EOF
     name                = "full-name"
     mutable             = true
   }
+
+  # NOTE: cannot modify or remove schema items
+  lifecycle {
+    ignore_changes = [
+      schema
+    ]
+  }
 }
 
 # Setup Cognito UserPoolClient
@@ -65,6 +72,6 @@ resource "aws_cognito_user_pool_client" "client" {
   explicit_auth_flows = ["ALLOW_ADMIN_USER_PASSWORD_AUTH", "ALLOW_CUSTOM_AUTH", "ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
   allowed_oauth_flows = ["code", "implicit"]
   allowed_oauth_scopes = ["email", "openid", "phone", "profile"]
-  callback_urls = ["https://${var.hostname}/auth-challenge"]
+  callback_urls = ["https://${var.stage}.${var.hostname}/auth-challenge"]
   prevent_user_existence_errors = "ENABLED"
 }

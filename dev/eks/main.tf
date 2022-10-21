@@ -1,6 +1,6 @@
 provider "aws" {
   region = local.region
-  profile = "ivorscott"
+  profile = var.profile
 }
 
 provider "kubernetes" {
@@ -46,7 +46,7 @@ locals {
 #---------------------------------------------------------------
 
 module "eks_blueprints" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.8.1"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.13.0"
 
   cluster_name    = local.name
   cluster_version = "1.23"
@@ -67,7 +67,7 @@ module "eks_blueprints" {
 }
 
 module "eks_blueprints_kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.8.1"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.13.0"
 
   eks_cluster_id       = module.eks_blueprints.eks_cluster_id
   eks_cluster_endpoint = module.eks_blueprints.eks_cluster_endpoint
@@ -75,23 +75,10 @@ module "eks_blueprints_kubernetes_addons" {
   eks_cluster_version  = module.eks_blueprints.eks_cluster_version
   eks_cluster_domain   = var.eks_cluster_domain
 
-  enable_argocd = true
-  argocd_applications = {
-    workloads = {
-      path     = "manifests"
-      repo_url = "https://github.com/devpies/saas-infra.git"
-      values = {
-        spec = {
-          ingress = {
-            host = var.eks_cluster_domain
-          }
-        }
-      }
-    }
-  }
-
+  enable_argocd                       = true
   enable_aws_load_balancer_controller = true
   enable_external_dns                 = true
+  enable_traefik                      = true
 
   tags = local.tags
 }

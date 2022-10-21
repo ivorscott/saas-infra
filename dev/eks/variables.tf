@@ -1,11 +1,13 @@
 variable "eks_cluster_domain" {
-  type        = string
   description = "Route53 domain for the cluster."
-  default     = "devpie.io"
+  type        = string
 }
 
 variable "acm_certificate_domain" {
+  description = "Route53 certificate domain."
   type        = string
-  description = "Route53 certificate domain"
-  default     = "*.devpie.io"
+}
+variable "profile" {
+  description = "The AWS profile to fetch credentials for."
+  type = string
 }

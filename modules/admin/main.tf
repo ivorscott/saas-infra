@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.2.3"
+  required_version = ">= 0.15.5, <= 1.3.3"
 }
 
 data "aws_caller_identity" "current" {}
@@ -15,7 +15,7 @@ resource "aws_cognito_user_pool" "pool" {
       email_message = <<EOF
       <b>Welcome to DevPie Admin</b> <br>
       <br>
-      You can log into the app <a href="https://admin.${var.hostname}">here</a>.
+      You can log into the app <a href="https://admin-${var.stage}.${var.hostname}">here</a>.
       <br>
       Your username is: <b>{username}</b>
       <br>

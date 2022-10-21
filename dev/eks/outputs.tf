@@ -4,5 +4,5 @@ output "configure_kubectl" {
 }
 
 output "eks_cluster_name" {
-  value = module.eks_blueprints.cluster_name
+  value = module.eks_blueprints.eks_cluster_id
 }

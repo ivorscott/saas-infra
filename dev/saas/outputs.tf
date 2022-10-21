@@ -20,10 +20,12 @@ output "postgres_hostname_users" {
 
 output "postgres_username_users" {
   value = module.rds.db_users_instance_username
+  sensitive = true
 }
 
 output "postgres_password_users" {
   value = module.rds.db_users_instance_password
+  sensitive = true
 }
 
 output "postgres_hostname_projects" {
@@ -32,10 +34,12 @@ output "postgres_hostname_projects" {
 
 output "postgres_username_projects" {
   value = module.rds.db_projects_instance_username
+  sensitive = true
 }
 
 output "postgres_password_projects" {
   value = module.rds.db_projects_instance_password
+  sensitive = true
 }
 
 output "postgres_hostname_admin" {
@@ -44,8 +48,10 @@ output "postgres_hostname_admin" {
 
 output "postgres_username_admin" {
   value = module.rds.db_admin_instance_username
+  sensitive = true
 }
 
 output "postgres_password_admin" {
   value = module.rds.db_admin_instance_password
+  sensitive = true
 }

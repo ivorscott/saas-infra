@@ -26,9 +26,10 @@ email   = ""
 3. Provision infrastructure for your desired environment.
 
 ```bash
-make local
-# or
-make dev
+cd local # or dev
+make init
+make plan
+make apply
 ```
 
 ### References

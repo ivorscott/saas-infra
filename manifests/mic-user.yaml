@@ -22,12 +22,12 @@ spec:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: aws_secrets
+                  name: aws.secrets
                   key: aws_access_key_id
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: aws_secrets
+                  name: aws.secrets
                   key: aws_secret_access_key
             - name: AWS_DEFAULT_REGION
               valueFrom:
@@ -39,7 +39,7 @@ spec:
             - name: USER_COGNITO_SHARED_USER_POOL_ID
               valueFrom:
                 secretKeyRef:
-                  name: cognito_secrets
+                  name: cognito.secrets
                   key: shared_user_pool_id
             - name: USER_COGNITO_REGION
               valueFrom:
@@ -51,17 +51,17 @@ spec:
             - name: USER_DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: postgres_secrets
+                  name: postgres.secrets
                   key: postgres_hostname_users
             - name: USER_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: postgres_secrets
+                  name: postgres.secrets
                   key: postgres_username_users
             - name: USER_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres_secrets
+                  name: postgres.secrets
                   key: postgres_password_users
             - name: USER_DYNAMODB_CONNECTION_TABLE
               valueFrom:

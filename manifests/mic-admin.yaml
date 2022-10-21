@@ -22,12 +22,12 @@ spec:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: aws_secrets
+                  name: aws.secrets
                   key: aws_access_key_id
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: aws_secrets
+                  name: aws.secrets
                   key: aws_secret_access_key
             - name: AWS_DEFAULT_REGION
               valueFrom:
@@ -39,17 +39,17 @@ spec:
             - name: ADMIN_COGNITO_USER_POOL_ID
               valueFrom:
                 secretKeyRef:
-                  name: cognito_secrets
+                  name: cognito.secrets
                   key: admin_user_pool_id
             - name: ADMIN_COGNITO_USER_POOL_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: cognito_secrets
+                  name: cognito.secrets
                   key: admin_app_client_id
             - name: ADMIN_COGNITO_SHARED_USER_POOL_ID
               valueFrom:
                 secretKeyRef:
-                  name: cognito_secrets
+                  name: cognito.secrets
                   key: shared_user_pool_id
             - name: ADMIN_COGNITO_REGION
               valueFrom:
@@ -67,17 +67,17 @@ spec:
             - name: ADMIN_DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: postgres_secrets
+                  name: postgres.secrets
                   key: postgres_hostname_admin
             - name: ADMIN_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: postgres_secrets
+                  name: postgres.secrets
                   key: postgres_username_admin
             - name: ADMIN_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres_secrets
+                  name: postgres.secrets
                   key: postgres_password_admin
             - name: ADMIN_DYNAMODB_TENANT_TABLE
               valueFrom:
