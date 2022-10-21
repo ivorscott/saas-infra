@@ -1,5 +1,3 @@
-include .env
-
 # default arguments
 hostname ?= devpie.io
 
@@ -14,14 +12,19 @@ dev:
 
 	terraform -chdir="./dev/eks" init
 	terraform -chdir="./dev/eks" apply \
-	-var eks_cluster_domain      = "$(hostname)" \
-	-var acm_certificate_domain  = "*.$(hostname)"
+	-var eks_cluster_domain="$(hostname)" \
+	-var acm_certificate_domain="*.$(hostname)"
+
+	shell($(terraform -chdir="./dev/eks" output -raw configure_kubectl))
+
+	./scripts/generate-secrets.sh
+	./scripts/install-ebs-csi-driver.sh
 
 	argocd app create dev-apps \
-		--dest-namespace argocd  \
-		--dest-server https://kubernetes.default.svc  \
-		--repo https://github.com/devpies/saas-infra.git \
-		--path "manifests"
+	--dest-namespace argocd  \
+	--dest-server https://kubernetes.default.svc  \
+	--repo https://github.com/devpies/saas-infra.git \
+	--path "manifests"
 
 	argocd app sync dev-apps
 .PHONY: dev
