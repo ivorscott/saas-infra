@@ -5,16 +5,16 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: mic-app
+      app:efd36f2
   template:
     metadata:
       labels:
-        app: mic-app
+        app:efd36f2
     spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: ghcr.io/devpies/app:39bb8d3
+        - image: ghcr.io/devpies/app:efd36f2
           name: mic-app
           ports:
             - containerPort: 80
@@ -25,7 +25,7 @@ metadata:
   name: mic-app-svc
 spec:
   selector:
-    app: mic-app
+    app:efd36f2
   ports:
     - port: 80
       targetPort: 80
