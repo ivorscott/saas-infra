@@ -22,12 +22,12 @@ spec:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: secrets
+                  name: aws_secrets
                   key: aws_access_key_id
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: secrets
+                  name: aws_secrets
                   key: aws_secret_access_key
             - name: AWS_DEFAULT_REGION
               valueFrom:
@@ -39,17 +39,17 @@ spec:
             - name: ADMIN_COGNITO_USER_POOL_ID
               valueFrom:
                 secretKeyRef:
-                  name: secrets
+                  name: cognito_secrets
                   key: admin_user_pool_id
             - name: ADMIN_COGNITO_USER_POOL_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: secrets
+                  name: cognito_secrets
                   key: admin_app_client_id
             - name: ADMIN_COGNITO_SHARED_USER_POOL_ID
               valueFrom:
                 secretKeyRef:
-                  name: secrets
+                  name: cognito_secrets
                   key: shared_user_pool_id
             - name: ADMIN_COGNITO_REGION
               valueFrom:
