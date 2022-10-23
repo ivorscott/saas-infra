@@ -8,18 +8,6 @@ data:
     http: 8222
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ebs-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: ebs-sc
-  resources:
-    requests:
-      storage: 4Gi #TODO: determine appropriate size
----
-apiVersion: v1
 kind: Service
 metadata:
   name: nats-svc
