@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script automates the deployment of the Amazon EBS CSI driver.
 
-cd eks
+cd dev/eks
 
 CLUSTER_NAME=$(terraform output -raw eks_cluster_name)
 OIDC_PROVIDER_URL=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text)

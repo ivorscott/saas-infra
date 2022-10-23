@@ -9,8 +9,7 @@ kubectl create secret generic aws.secrets \
 # Generate the Docker Registry secret
 read -p 'Github email: ' githubemail
 read -p 'Github username: ' githubusername
-read -sp 'Github personal access token with (read:packages) scope: ' githubreadtoken
-echo xxxxxxxxxxxxxxxxxxxxxxxxxx
+githubreadtoken=`cat .ghcr.token`
 
 kubectl create secret docker-registry ghcr-auth \
 --docker-server=https://ghcr.io \
@@ -18,15 +17,15 @@ kubectl create secret docker-registry ghcr-auth \
 --docker-password=$githubreadtoken \
 --docker-email=$githubemail || true
 
-cd saas
+cd dev/saas
 
-# Generate the Cognito secrets
+## Generate the Cognito secrets
 kubectl create secret generic cognito.secrets \
 --from-literal=admin_user_pool_id=$(terraform output -raw admin_user_pool_id) \
 --from-literal=admin_app_client_id=$(terraform output -raw admin_app_client_id) \
 --from-literal=shared_user_pool_id=$(terraform output -raw tenant_user_pool_id) || true
 
-# Generate the Postgres secrets
+## Generate the Postgres secrets
 kubectl create secret generic postgres.secrets \
 --from-literal=postgres_username_users=$(terraform output -raw postgres_hostname_users) \
 --from-literal=postgres_password_users=$(terraform output -raw postgres_password_users) \

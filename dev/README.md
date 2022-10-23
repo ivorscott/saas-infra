@@ -15,7 +15,9 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 
 ### Setup
 1. Create your own `terraform.tfvars` file in `dev/saas` & `dev/eks` (use the sample file).
-2. Provision infrastructure for the dev environment:
+2. Add `.ghcr.token` to the project root containing your Github Personal Access Token. This token should have `read:packages` scope 
+and will be used to access the container registry.
+3. Provision infrastructure for the dev environment:
 
 ```bash
 cd dev

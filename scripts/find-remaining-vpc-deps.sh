@@ -1,4 +1,6 @@
 #!/bin/bash
+# This script automates debugging of AWS Virtual Private Cloud dependencies.
+
 vpc="$1"
 region="$2"
 aws ec2 describe-vpc-peering-connections --region $region --filters 'Name=requester-vpc-info.vpc-id,Values='$vpc | grep VpcPeeringConnectionId
