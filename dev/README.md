@@ -15,7 +15,7 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 
 ### Setup
 1. Create your own `terraform.tfvars` file in `dev/saas` & `dev/eks` (use the sample file).
-2. Create your own `ghcr-secret.yaml` file in manifests (use the sample file).
+2. Create your own `ghcr-secret.yaml` file in manifests (use the [sample file](../sample.ghcr-secret.yaml)).
 3. Provision infrastructure for the dev environment:
 
 ```bash
