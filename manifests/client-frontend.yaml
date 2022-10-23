@@ -18,6 +18,7 @@ spec:
           name: client-frontend
           ports:
             - containerPort: 80
+          imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service

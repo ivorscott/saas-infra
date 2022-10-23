@@ -6,7 +6,17 @@ kubectl create secret generic aws.secrets \
 --from-literal=aws_access_key_id=$(aws configure get aws_access_key_id) \
 --from-literal=aws_secret_access_key=$(aws configure get aws_secret_access_key) || true
 
-kubectl apply -f ../manifests/ghcr-secret.yaml
+# Generate the Docker Registry secret
+read -p 'Github email: ' githubemail
+read -p 'Github username: ' githubusername
+read -sp 'Github personal access token with (read:packages) scope: ' githubreadtoken
+echo xxxxxxxxxxxxxxxxxxxxxxxxxx
+
+kubectl create secret docker-registry ghcr-auth \
+--docker-server=https://ghcr.io \
+--docker-username=$githubusername \
+--docker-password=$githubreadtoken \
+--docker-email=$githubemail || true
 
 cd saas
 

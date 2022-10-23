@@ -6,3 +6,4 @@ terraform.tfvars
 manifests/ghcr-secret.yaml
 .env
 scripts/policies/trust-policy.json
+.ghcr.token

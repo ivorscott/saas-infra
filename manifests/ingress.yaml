@@ -17,14 +17,14 @@ spec:
       http:
         paths:
           # HTTP to HTTPS redirect entry
-          - path: /*
+          - path: /
             pathType: Exact
             backend:
               service:
                 name: ssl-redirect
                 port:
                   name: use-annotation
-          - path: /*
+          - path: /
             pathType: Exact
             backend:
               service:
@@ -51,14 +51,14 @@ spec:
       http:
         paths:
           # HTTP to HTTPS redirect entry
-          - path: /*
+          - path: /
             pathType: Exact
             backend:
               service:
                 name: ssl-redirect
                 port:
                   name: use-annotation
-          - path: /*
+          - path: /
             pathType: Exact
             backend:
               service:

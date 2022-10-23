@@ -18,6 +18,7 @@ spec:
           name: mic-admin
           ports:
             - containerPort: 4000
+          imagePullPolicy: Always
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:

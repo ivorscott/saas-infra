@@ -18,6 +18,7 @@ spec:
           name: mic-user
           ports:
             - containerPort: 4005
+          imagePullPolicy: Always
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:

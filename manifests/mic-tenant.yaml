@@ -18,6 +18,7 @@ spec:
           name: mic-tenant
           ports:
             - containerPort: 4002
+          imagePullPolicy: Always
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:

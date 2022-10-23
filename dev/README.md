@@ -15,8 +15,7 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 
 ### Setup
 1. Create your own `terraform.tfvars` file in `dev/saas` & `dev/eks` (use the sample file).
-2. Create your own `ghcr-secret.yaml` file in manifests (use the [sample file](../sample.ghcr-secret.yaml)).
-3. Provision infrastructure for the dev environment:
+2. Provision infrastructure for the dev environment:
 
 ```bash
 cd dev
@@ -24,25 +23,24 @@ make init
 make plan
 make apply
 ```
-4. Port forward to connect to the ArgoCD API server.
+3. Port forward to connect to the ArgoCD API server.
 ```bash
 kubectl port-forward svc/argo-cd-argocd-server -n argocd 8080:443
 ```
 
-5. Copy the initial password for the ArgoCD UI.
+4. Copy the initial password for the ArgoCD UI.
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 ```
 
-6. Navigate to http://localhost:8080 to see the ArgoCD UI. Use `admin` as your username and insert the copied password. Once logged in 
+5. Navigate to http://localhost:8080 to see the ArgoCD UI. Use `admin` as your username and insert the copied password. Once logged in 
 update your password to something else. 
 
-7. Port forward to connect to the Traefik dashboard.
+6. Port forward to connect to the Traefik dashboard.
 ```bash
 kubectl port-forward deploy/traefik -n traefik 9000:9000
 ```
-8. Navigate to http://localhost:9000/dashboard/#/ to see the Traefik dashboard.
-
+7. Navigate to http://localhost:9000/dashboard/#/ to see the Traefik dashboard.
 
 ## Debugging Cheatsheet
 
@@ -65,7 +63,7 @@ kubectl get deploy -o wide -n default | awk '{ print $1, $7 }' | column -t
 __Print events sorted__
 
 ```bash
-kubectl -n <namespace> get events --sort-by='{.lastTimestamp}'
+kubectl -n default get events --sort-by='{.lastTimestamp}'
 ```
 
 ### References

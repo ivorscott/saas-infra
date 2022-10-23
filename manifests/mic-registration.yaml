@@ -18,6 +18,7 @@ spec:
           name: mic-registration
           ports:
             - containerPort: 4001
+          imagePullPolicy: Always
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
