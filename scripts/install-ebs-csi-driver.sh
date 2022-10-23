@@ -4,7 +4,7 @@
 cd dev/eks
 
 CLUSTER_NAME=$(terraform output -raw eks_cluster_name)
-OIDC_PROVIDER_URL=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text)
+OIDC_PROVIDER_ID=$(aws eks describe-cluster --name dev --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 AWS_REGION=$(echo $AWS_DEFAULT_REGION)
 
@@ -19,12 +19,12 @@ cat << EoF > trust-policy.json
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "arn:aws:iam::$AWS_ACCOUNT_ID:oidc-provider/oidc.eks.$AWS_REGION.amazonaws.com/id/$OIDC_PROVIDER_URL"
+        "Federated": "arn:aws:iam::$AWS_ACCOUNT_ID:oidc-provider/oidc.eks.$AWS_REGION.amazonaws.com/id/$OIDC_PROVIDER_ID"
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "oidc.eks.$AWS_REGION.amazonaws.com/id/$OIDC_PROVIDER_URL:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+          "oidc.eks.$AWS_REGION.amazonaws.com/id/$OIDC_PROVIDER_ID:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
         }
       }
     }
