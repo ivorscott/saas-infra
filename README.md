@@ -18,10 +18,10 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 - install [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/) 
 
 ### Setup
-1. Navigate to the desired environment `local/saas`, `dev/saas` `dev/eks`, etc.
+1. Navigate to the desired environment: `local/saas`, `dev/saas`, `dev/eks`, etc.
 2. Create you own `terraform.tfvars` file from the sample. For example:
 
-```
+```bash
 profile  = ""
 region  = "eu-central-1"
 stage   = "local"
@@ -37,6 +37,8 @@ make init
 make plan
 make apply
 ```
+
+See [dev](dev/README.md) setup.
 
 ### References
 
