@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: admin-ingress
@@ -18,15 +18,21 @@ spec:
         paths:
           # HTTP to HTTPS redirect entry
           - path: /*
+            pathType: Prefix
             backend:
-              serviceName: ssl-redirect
-              servicePort: use-annotation
+              service:
+                name: ssl-redirect
+                port:
+                  name: use-annotation
           - path: /*
+            pathType: Prefix
             backend:
-              serviceName: traefik
-              servicePort: 443
+              service:
+                name: traefik
+                port:
+                  number: 443
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: api-ingress
@@ -46,10 +52,16 @@ spec:
         paths:
           # HTTP to HTTPS redirect entry
           - path: /*
+            pathType: Prefix
             backend:
-              serviceName: ssl-redirect
-              servicePort: use-annotation
+              service:
+                name: ssl-redirect
+                port:
+                  name: use-annotation
           - path: /*
+            pathType: Prefix
             backend:
-              serviceName: traefik
-              servicePort: 443
+              service:
+                name: traefik
+                port:
+                  number: 443
