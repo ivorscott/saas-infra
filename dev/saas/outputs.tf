@@ -15,7 +15,7 @@ output "tenant_app_client_id" {
 }
 
 output "postgres_hostname_users" {
-  value = module.rds.db_users_instance_endpoint
+  value = module.rds.db_users_instance_address
 }
 
 output "postgres_username_users" {
@@ -29,7 +29,7 @@ output "postgres_password_users" {
 }
 
 output "postgres_hostname_projects" {
-  value = module.rds.db_projects_instance_endpoint
+  value = module.rds.db_users_instance_address
 }
 
 output "postgres_username_projects" {
@@ -43,7 +43,7 @@ output "postgres_password_projects" {
 }
 
 output "postgres_hostname_admin" {
-  value = module.rds.db_admin_instance_endpoint
+  value = module.rds.db_users_instance_address
 }
 
 output "postgres_username_admin" {

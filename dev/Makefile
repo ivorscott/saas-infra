@@ -11,10 +11,6 @@ plan:
 	terraform -chdir="eks" plan
 .PHONY: plan
 
-login:
-	@ cd ..; ./scripts/container-registry-login.sh
-.PHONY: login
-
 sync:
 	argocd app sync dev-apps
 .PHONY: sync
@@ -28,10 +24,6 @@ apply:
 
 	@ cd ..; ./scripts/generate-secrets.sh
 	@ cd ..; ./scripts/install-ebs-csi-driver.sh
-
-	lsof -t -i:8080 | xargs -r kill
-	@kubectl port-forward svc/argo-cd-argocd-server -n argocd 8080:443 > /dev/null 2>&1 &
-
 	@ cd ..; ./scripts/argocd-login.sh
 
 	argocd app create dev-apps \

@@ -68,6 +68,11 @@ __Print events sorted__
 kubectl -n default get events --sort-by='{.lastTimestamp}'
 ```
 
+__Refresh Terraform state with the opportunity to review__
+```bash
+terraform apply -refresh-only
+```
+
 ### References
 
 - [blog post: bootstrapping clusters with eks blueprints](https://aws.amazon.com/blogs/containers/bootstrapping-clusters-with-eks-blueprints/)
