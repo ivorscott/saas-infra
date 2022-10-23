@@ -15,6 +15,10 @@ login:
 	@ cd ..; ./scripts/container-registry-login.sh
 .PHONY: login
 
+sync:
+	argocd app sync dev-apps
+.PHONY: sync
+
 apply:
 	@ echo "Provisioning infrastructure..."
 	 terraform -chdir="saas" apply || true
