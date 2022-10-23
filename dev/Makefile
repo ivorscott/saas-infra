@@ -21,6 +21,7 @@ apply:
 	@../scripts/generate-secrets.sh
 	@../scripts/install-ebs-csi-driver.sh
 
+	lsof -t -i:8080 | xargs -r kill
 	@kubectl port-forward svc/argo-cd-argocd-server -n argocd 8080:443 > /dev/null 2>&1 &
 	@../scripts/argocd-login.sh
 

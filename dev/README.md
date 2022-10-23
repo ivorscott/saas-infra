@@ -11,10 +11,12 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 - install [argocd cli](https://argo-cd.readthedocs.io/en/stable/getting_started/#2-download-argo-cd-cli)
 - install [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - install [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/) 
+- github personal access token to pull images
 
 ### Setup
 1. Create your own `terraform.tfvars` file in `dev/saas` & `dev/eks` (use the sample file).
-2. Provision infrastructure for the dev environment:
+2. Create your own `ghcr-secret.yaml` file in manifests (use the sample file).
+3. Provision infrastructure for the dev environment:
 
 ```bash
 cd dev
@@ -42,7 +44,7 @@ kubectl port-forward deploy/traefik -n traefik 9000:9000
 8. Navigate to http://localhost:9000/dashboard/#/ to see the Traefik dashboard.
 
 
-## ArgoCD Cheatsheet
+## Debugging Cheatsheet
 
 __Get app details__
 
@@ -55,6 +57,16 @@ __Sync (aka Deploy) app__
 argocd app sync dev-apps
 ```
 
+__Print images in namespace__
+```bash
+kubectl get deploy -o wide -n default | awk '{ print $1, $7 }' | column -t
+```
+
+__Print events sorted__
+
+```bash
+kubectl -n <namespace> get events --sort-by='{.lastTimestamp}'
+```
 
 ### References
 

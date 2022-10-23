@@ -3,7 +3,6 @@
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfvars
-secrets-ghcr.yaml
 manifests/ghcr-secret.yaml
 .env
 scripts/policies/trust-policy.json

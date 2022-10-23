@@ -15,7 +15,8 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 - existing domain in hosted zone
 - install [argocd cli](https://argo-cd.readthedocs.io/en/stable/getting_started/#2-download-argo-cd-cli)
 - install [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- install [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/) 
+- install [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+- github personal access token to pull images
 
 ### Setup
 1. Navigate to the desired environment: `local/saas`, `dev/saas`, `dev/eks`, etc.

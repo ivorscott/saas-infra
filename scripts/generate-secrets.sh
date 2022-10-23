@@ -4,7 +4,9 @@
 # Generate the AWS secrets
 kubectl create secret generic aws.secrets \
 --from-literal=aws_access_key_id=$(aws configure get aws_access_key_id) \
---from-literal=aws_secret_access_key=$(aws configure get aws_secret_access_key)
+--from-literal=aws_secret_access_key=$(aws configure get aws_secret_access_key) || true
+
+kubectl apply -f ../manifests/ghcr-secret.yaml
 
 cd saas
 
