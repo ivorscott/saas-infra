@@ -18,14 +18,14 @@ spec:
         paths:
           # HTTP to HTTPS redirect entry
           - path: /*
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: ssl-redirect
                 port:
                   name: use-annotation
           - path: /*
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: traefik
@@ -52,14 +52,14 @@ spec:
         paths:
           # HTTP to HTTPS redirect entry
           - path: /*
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: ssl-redirect
                 port:
                   name: use-annotation
           - path: /*
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: traefik
