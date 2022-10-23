@@ -14,7 +14,7 @@ spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: ghcr.io/devpies/client:efd36f2
+        - image: ghcr.io/devpies/client:d3ab620
           name: client-frontend
           ports:
             - containerPort: 80
