@@ -4,7 +4,7 @@
 cd dev/eks
 
 CLUSTER_NAME=$(terraform output -raw eks_cluster_name)
-OIDC_PROVIDER_ID=$(aws eks describe-cluster --name dev --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
+OIDC_PROVIDER_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 AWS_REGION=$(echo $AWS_DEFAULT_REGION)
 
