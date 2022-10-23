@@ -14,10 +14,25 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 - github personal access token to pull images
 
 ### Setup
-1. Create your own `terraform.tfvars` file in `dev/saas` & `dev/eks` (use the sample file).
-2. Add `.ghcr.token` to the project root containing your Github Personal Access Token. This token should have `read:packages` scope 
+1. Configure your `~/.bash_profile` with AWS credentials and create a named profile:
+
+```bash
+# .bash_profile 
+
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_DEFAULT_REGION=
+```
+
+```bash
+source ~/.bash_profile
+aws configure --profile <name>
+```
+
+2. Create your own `terraform.tfvars` file in `dev/saas` & `dev/eks` (use the sample file).
+3. Add `.ghcr.token` to the project root containing your Github Personal Access Token. This token should have `read:packages` scope 
 and will be used to access the container registry.
-3. Provision infrastructure for the dev environment:
+4. Provision infrastructure for the dev environment:
 
 ```bash
 cd dev
@@ -25,24 +40,24 @@ make init
 make plan
 make apply
 ```
-3. Port forward to connect to the ArgoCD API server.
+5. Port forward to connect to the ArgoCD API server.
 ```bash
 kubectl port-forward svc/argo-cd-argocd-server -n argocd 8080:443
 ```
 
-4. Copy the initial password for the ArgoCD UI.
+6. Copy the initial password for the ArgoCD UI.
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 ```
 
-5. Navigate to http://localhost:8080 to see the ArgoCD UI. Use `admin` as your username and insert the copied password. Once logged in 
+7. Navigate to http://localhost:8080 to see the ArgoCD UI. Use `admin` as your username and insert the copied password. Once logged in 
 update your password to something else. 
 
-6. Port forward to connect to the Traefik dashboard.
+8. Port forward to connect to the Traefik dashboard.
 ```bash
 kubectl port-forward deploy/traefik -n traefik 9000:9000
 ```
-7. Navigate to http://localhost:9000/dashboard/#/ to see the Traefik dashboard.
+9. Navigate to http://localhost:9000/dashboard/#/ to see the Traefik dashboard.
 
 ## Debugging Cheatsheet
 

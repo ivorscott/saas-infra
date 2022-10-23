@@ -19,8 +19,23 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 - github personal access token to pull images
 
 ### Setup
-1. Navigate to the desired environment: `local/saas`, `dev/saas`, `dev/eks`, etc.
-2. Create you own `terraform.tfvars` file from the sample. For example:
+1. Configure your `~/.bash_profile` with AWS credentials and create a named profile:
+
+```bash
+# .bash_profile 
+
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_DEFAULT_REGION=
+```
+
+```bash
+source ~/.bash_profile
+aws configure --profile <name>
+```
+
+2. Navigate to the desired environment: `local/saas`, `dev/saas`, `dev/eks`, etc.
+3. Create you own `terraform.tfvars` file from the sample. For example:
 
 ```bash
 profile  = ""
@@ -30,7 +45,7 @@ hostname = "devpie.local"
 email   = ""
 ```
 
-3. Provision infrastructure for your desired environment.
+4. Provision infrastructure for your desired environment.
 
 ```bash
 cd local # or dev
@@ -47,3 +62,4 @@ See [dev](dev/README.md) setup.
 - [blog post: aws load balancer controller, acm, external-dns, and traefik](https://revolgy.com/blog/advanced-api-routing-in-eks-with-traefik-aws-loadbalancer-controller-and-external-dns/) 
 - [argo cd](https://argoproj.github.io/argo-cd/getting_started/)
 - [eks blueprints](https://github.com/aws-ia/terraform-aws-eks-blueprints)
+- [creating named profiles](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html#cli-configure-profiles-create)
