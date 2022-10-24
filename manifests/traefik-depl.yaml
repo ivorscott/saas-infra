@@ -28,7 +28,6 @@ spec:
         - name: traefik
           image: traefik:v2.7
           args:
-            - --api.insecure
             - --accesslog
             - --entrypoints.web.Address=:8000
             - --entrypoints.websecure.Address=:4443
