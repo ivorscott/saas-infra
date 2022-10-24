@@ -14,3 +14,28 @@ spec:
   stripPrefix:
     prefixes:
       - /api
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: headers
+spec:
+  headers:
+    accessControlAllowMethods:
+      - "GET"
+      - "OPTIONS"
+      - "POST"
+      - "PUT"
+      - "PATCH"
+      - "DELETE"
+    accessControlAllowOriginList:
+      - "https://devpie.io"
+    accessControlAllowHeaders:
+      - "Accept"
+      - "BasePath"
+      - "Authorization"
+      - "Cache-Control"
+      - "Content-Type"
+      - "Strict-Transport-Security"
+    accessControlMaxAge: 100
+    addVaryHeader: true
