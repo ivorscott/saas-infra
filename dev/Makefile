@@ -23,14 +23,7 @@ apply:
 	@ cd ..; ./scripts/generate-secrets.sh
 	@ cd ..; ./scripts/install-ebs-csi-driver.sh
 	@ cd ..; ./scripts/argocd-login.sh
-
-	argocd app create dev-apps \
-	--dest-namespace default  \
-	--dest-server https://kubernetes.default.svc  \
-	--repo https://github.com/devpies/saas-infra.git \
-	--path "manifests"
-
-	argocd app sync dev-apps
+	@ cd ..; ./scripts/create-argocd-app.sh
 .PHONY: dev
 
 delete:
