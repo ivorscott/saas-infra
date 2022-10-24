@@ -26,7 +26,7 @@ spec:
       serviceAccountName: traefik-ingress-controller
       containers:
         - name: traefik
-          image: traefik:v2.7
+          image: traefik:v2.9
           args:
             - --accesslog
             - --api.dashboard
@@ -44,6 +44,6 @@ spec:
               containerPort: 8000
             - name: websecure
               containerPort: 4443
-            - name: admin
-              containerPort: 8080
+            - name: dashboard
+              containerPort: 9000
 ---

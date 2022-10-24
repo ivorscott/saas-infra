@@ -8,8 +8,8 @@ spec:
       name: web
       port: 8000
     - protocol: TCP
-      name: admin
-      port: 8080
+      name: dashboard
+      port: 9000
     - protocol: TCP
       name: websecure
       port: 4443
