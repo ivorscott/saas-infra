@@ -28,11 +28,6 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-    - match: Host(`admin-dev.devpie.io`) && PathPrefix(`/ping`)
-      kind: Rule
-      services:
-        - name: ping@internal
-          kind: TraefikService
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -69,3 +64,20 @@ spec:
       middlewares:
         - name: headers
         - name: stripprefix
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: healthcheck
+  namespace: default
+  labels:
+    app: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Path(`/ping`)
+      kind: Rule
+      services:
+        - name: ping@internal
+          kind: TraefikService
