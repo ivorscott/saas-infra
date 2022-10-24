@@ -103,11 +103,13 @@ spec:
       priority: 10
       services:
         - name: argo-cd-argocd-server
+          namespace: argocd
           port: 80
     - match: Host(`argocd-dev.devpie.io`) && Headers(`Content-Type`, `application/grpc`)
       kind: Rule
       priority: 11
       services:
         - name: argo-cd-argocd-server
+          namespace: argocd
           port: 80
           scheme: h2c
