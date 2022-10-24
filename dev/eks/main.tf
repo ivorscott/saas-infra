@@ -81,9 +81,9 @@ module "eks_blueprints_kubernetes_addons" {
     chart            = "argo-cd"
     repository       = "https://argoproj.github.io/argo-helm"
     version          = "4.9.14"
-    namespace        = "argocd"
+    namespace        = "default"
     timeout          = "1200"
-    create_namespace = true
+    create_namespace = false
     values = [templatefile("${path.module}/argocd-values.yaml", {
       set_values = [
         # {
