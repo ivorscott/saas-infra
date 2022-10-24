@@ -55,11 +55,3 @@ make apply
 ```
 
 See [dev](dev/README.md) setup.
-
-### References
-
-- [blog post: bootstrapping clusters with eks blueprints](https://aws.amazon.com/blogs/containers/bootstrapping-clusters-with-eks-blueprints/)
-- [blog post: aws load balancer controller, acm, external-dns, and traefik](https://revolgy.com/blog/advanced-api-routing-in-eks-with-traefik-aws-loadbalancer-controller-and-external-dns/) 
-- [argo cd](https://argoproj.github.io/argo-cd/getting_started/)
-- [eks blueprints](https://github.com/aws-ia/terraform-aws-eks-blueprints)
-- [creating named profiles](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html#cli-configure-profiles-create)
