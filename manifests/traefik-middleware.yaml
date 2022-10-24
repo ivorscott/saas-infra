@@ -2,6 +2,8 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: basicauth
+  labels:
+    app: traefik
 spec:
   basicAuth:
     secret: traefik-secret
@@ -10,6 +12,8 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: stripprefix
+  labels:
+    app: traefik
 spec:
   stripPrefix:
     prefixes:
@@ -19,6 +23,8 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: headers
+  labels:
+    app: traefik
 spec:
   headers:
     accessControlAllowMethods:
