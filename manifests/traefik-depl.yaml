@@ -27,8 +27,10 @@ spec:
           image: traefik:v2.9
           args:
             - --accesslog
-            - --log.level=DEBUG
             - --api.dashboard
+            - --log.level=DEBUG
+            - --ping
+            - --ping.manualrouting=true
             - --entrypoints.web.Address=:8000
             - --entrypoints.websecure.Address=:443
             - --providers.kubernetescrd
