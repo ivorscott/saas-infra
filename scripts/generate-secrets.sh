@@ -25,6 +25,23 @@ kubectl create secret docker-registry ghcr-auth \
 --dry-run=client \
 --output=yaml | kubectl apply -f -
 
+## Generate the Traefik secret
+echo "Generating Traefik secret..."
+username=`echo -n "saas-admin" | base64`
+password=`cat .traefik.password`
+
+cat << EoF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: traefik-secret
+  namespace: default
+type: kubernetes.io/basic-auth
+data:
+  username: $username
+  password: $password
+EoF
+
 cd dev/saas
 
 ## Generate the Cognito secrets

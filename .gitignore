@@ -7,3 +7,4 @@ manifests/ghcr-secret.yaml
 .env
 trust-policy.json
 .ghcr.token
+.traefik.password

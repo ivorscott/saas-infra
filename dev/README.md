@@ -18,7 +18,6 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 
 ```bash
 # .bash_profile 
-
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
 export AWS_DEFAULT_REGION=
@@ -30,8 +29,13 @@ aws configure --profile <name>
 ```
 
 2. Create your own `terraform.tfvars` file in `dev/saas` & `dev/eks` (use the sample file).
-3. Add `.ghcr.token` to the project root containing your Github Personal Access Token. This token should have `read:packages` scope 
-and will be used to access the container registry.
+3. Add `.ghcr.token` to the project root containing your Github Personal Access Token. This token allows the cluster to 
+pull container images. It should have `read:packages` scope.
+4. Add `.traefik.password` to the project root containing a base64 encoded password. This is used to access the traefik dashboard.
+```bash
+echo -n "MyP@ssword" | base64 # -n removes newline characters from the result
+```
+
 4. Provision infrastructure for the dev environment:
 
 ```bash
@@ -83,9 +87,14 @@ __Print events sorted__
 kubectl -n default get events --sort-by='{.lastTimestamp}'
 ```
 
-__Refresh Terraform state with the opportunity to review__
+__Refresh Terraform state with the opportunity to review (useful if terraform outputs change)__
 ```bash
 terraform apply -refresh-only
+```
+
+__Get Base64 encoded secret and decode it (requires jq)__
+```bash
+kubectl get secret traefik-secret -o json | jq '.data | map_values(@base64d)'
 ```
 
 ### References
@@ -94,3 +103,5 @@ terraform apply -refresh-only
 - [blog post: aws load balancer controller, acm, external-dns, and traefik](https://revolgy.com/blog/advanced-api-routing-in-eks-with-traefik-aws-loadbalancer-controller-and-external-dns/) 
 - [argo cd](https://argoproj.github.io/argo-cd/getting_started/)
 - [eks blueprints](https://github.com/aws-ia/terraform-aws-eks-blueprints)
+- [aws alb ssl-redirect](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/tasks/ssl_redirect/)
+- [external dns w/ alb ingress](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/alb-ingress.md)

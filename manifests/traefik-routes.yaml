@@ -1,13 +1,4 @@
 apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: stripprefix
-spec:
-  stripPrefix:
-    prefixes:
-      - /api
----
-apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: admin
@@ -68,7 +59,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: healthcheck
+  name: traefik-healthcheck
   namespace: default
   labels:
     app: traefik
@@ -80,4 +71,21 @@ spec:
       kind: Rule
       services:
         - name: ping@internal
+          kind: TraefikService
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: default
+  labels:
+    app: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`traefik-dev.devpie.io`) && PathPrefix(`/dashboard`)
+      kind: Rule
+      services:
+        - name: api@internal
           kind: TraefikService
