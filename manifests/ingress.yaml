@@ -10,7 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/backend-protocol: HTTP
     alb.ingress.kubernetes.io/healthcheck-path: /ping
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    external-dns.alpha.kubernetes.io/hostname: admin-dev.devpie.io, api-dev.devpie.io, traefik-dev.devpie.io
+    external-dns.alpha.kubernetes.io/hostname: admin-dev.devpie.io, api-dev.devpie.io, traefik-dev.devpie.io, argocd-dev.devpie.io
   labels:
     app: traefik
 spec:

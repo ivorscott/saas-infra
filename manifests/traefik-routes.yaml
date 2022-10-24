@@ -86,3 +86,28 @@ spec:
           kind: TraefikService
       middlewares:
         - name: basicauth
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+  labels:
+    app: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`argocd-dev.devpie.io`) && PathPrefix(`/`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: argocd-server
+          port: 80
+    - match: Host(`argocd-dev.devpie.io`) && Headers(`Content-Type`, `application/grpc`)
+      kind: Rule
+      priority: 11
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
