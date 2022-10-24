@@ -77,12 +77,14 @@ module "eks_blueprints_kubernetes_addons" {
 
   enable_argocd                       = true
   argocd_helm_config = {
-    set_values = [
-      {
-        name  = "server.extraArgs[0]"
-        value = "--insecure"
-      }
-    ]
+    name             = "argo-cd"
+    chart            = "argo-cd"
+    repository       = "https://argoproj.github.io/argo-helm"
+    version          = "4.9.14"
+    namespace        = "argocd"
+    timeout          = "1200"
+    create_namespace = true
+    values = [templatefile("${path.module}/argocd-values.yaml", {})]
   }
 
   enable_aws_load_balancer_controller = true
