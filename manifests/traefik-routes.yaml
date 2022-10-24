@@ -84,7 +84,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`traefik-dev.devpie.io`) && PathPrefix(`/dashboard`)
+    - match: Host(`traefik-dev.devpie.io`) && PathPrefix(`/dashboard`) || PathPrefix(`/api`)
       kind: Rule
       services:
         - name: api@internal
