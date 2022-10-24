@@ -1,3 +1,6 @@
 server:
   extraArgs:
     - --insecure=true
+
+  service:
+    servicePortHttp: 8080
