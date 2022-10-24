@@ -4,3 +4,4 @@ server:
 
   service:
     servicePortHttp: 8080
+    namedTargetPort: false
