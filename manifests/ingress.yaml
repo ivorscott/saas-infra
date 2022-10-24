@@ -31,20 +31,20 @@ spec:
                 name: traefik
                 port:
                   number: 443
-                  
+
     - host: api-dev.devpie.io
       http:
         paths:
           # HTTP to HTTPS redirect entry
           - path: /
-            pathType: Exact
+            pathType: Prefix
             backend:
               service:
                 name: ssl-redirect
                 port:
                   name: use-annotation
           - path: /
-            pathType: Exact
+            pathType: Prefix
             backend:
               service:
                 name: traefik
