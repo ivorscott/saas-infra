@@ -76,6 +76,15 @@ module "eks_blueprints_kubernetes_addons" {
   eks_cluster_domain   = var.eks_cluster_domain
 
   enable_argocd                       = true
+  argocd_helm_config = {
+    set = [
+      {
+        name  = 'configs.params."server.insecure"'
+        value = true
+      }
+    ]
+  }
+
   enable_aws_load_balancer_controller = true
   enable_external_dns                 = true
 
