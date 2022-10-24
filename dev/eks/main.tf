@@ -84,7 +84,18 @@ module "eks_blueprints_kubernetes_addons" {
     namespace        = "argocd"
     timeout          = "1200"
     create_namespace = true
-    values = [templatefile("${path.module}/argocd-values.yaml", {})]
+    values = [templatefile("${path.module}/argocd-values.yaml", {
+      set_values = [
+        # {
+        #   name  = "configs.params.server.insecure"
+        #   value = true
+        # },
+        {
+          name  = "server.extraArgs[0]"
+          value = "--insecure"
+        }
+      ]
+    })]
   }
 
   enable_aws_load_balancer_controller = true
