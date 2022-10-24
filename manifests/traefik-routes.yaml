@@ -111,3 +111,4 @@ spec:
         - name: argo-cd-argocd-server
           port: 8080
           scheme: h2c
+  tls: {}
