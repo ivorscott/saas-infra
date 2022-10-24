@@ -79,7 +79,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`traefik-dev.devpie.io`) && PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+    - match: Host(`traefik-dev.devpie.io`) && PathPrefix(`/dashboard`) || Host(`traefik-dev.devpie.io`) && PathPrefix(`/api`)
       kind: Rule
       services:
         - name: api@internal
@@ -103,11 +103,11 @@ spec:
       priority: 10
       services:
         - name: argo-cd-argocd-server
-          port: http
+          port: 8080
     - kind: Rule
       match: Host(`argocd-dev.devpie.io`) && Headers(`Content-Type`, `application/grpc`)
       priority: 11
       services:
         - name: argo-cd-argocd-server
-          port: http
+          port: 8080
           scheme: h2c
