@@ -77,10 +77,10 @@ module "eks_blueprints_kubernetes_addons" {
 
   enable_argocd                       = true
   argocd_helm_config = {
-    set = [
+    set_values = [
       {
-        name  = 'configs.params."server.insecure"'
-        value = true
+        name  = "server.extraArgs[0]"
+        value = "--insecure"
       }
     ]
   }
