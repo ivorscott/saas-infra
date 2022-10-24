@@ -12,7 +12,7 @@ spec:
       - "PATCH"
       - "DELETE"
     accessControlAllowOriginList:
-      - "https://dev.devpie.io"
+      - "https://devpie.io"
     accessControlAllowHeaders:
       - "Accept"
       - "BasePath"

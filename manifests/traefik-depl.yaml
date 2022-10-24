@@ -3,7 +3,6 @@ kind: ServiceAccount
 metadata:
   namespace: default
   name: traefik-ingress-controller
-
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -12,7 +11,6 @@ metadata:
   name: traefik
   labels:
     app: traefik
-
 spec:
   replicas: 1
   selector:
@@ -29,10 +27,13 @@ spec:
           image: traefik:v2.9
           args:
             - --accesslog
+            - --log.level=DEBUG
             - --api.dashboard
             - --entrypoints.web.Address=:8000
-            - --entrypoints.websecure.Address=:4443
+            - --entrypoints.websecure.Address=:443
             - --providers.kubernetescrd
+            - --providers.kubernetescrd.namespaces=default
+            - --providers.kubernetescrd.labelselector=app=traefik
             - --certificatesresolvers.myresolver.acme.tlschallenge
             - --certificatesresolvers.myresolver.acme.email=foo@you.com
             - --certificatesresolvers.myresolver.acme.storage=acme.json
@@ -43,7 +44,6 @@ spec:
             - name: web
               containerPort: 8000
             - name: websecure
-              containerPort: 4443
-            - name: dashboard
-              containerPort: 9000
----
+              containerPort: 443
+            - name: admin
+              containerPort: 8080

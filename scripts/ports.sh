@@ -7,7 +7,7 @@ kubectl port-forward service/argo-cd-argocd-server -n argocd 8080:443 > /dev/nul
 
 # Traefik
 lsof -t -i:9000 | xargs -r kill
-kubectl port-forward service/traefik 9000:9000 > /dev/null 2>&1 &
+kubectl port-forward service/traefik 9000:8080 > /dev/null 2>&1 &
 
 # NATS
 lsof -t -i:4222 | xargs -r kill
