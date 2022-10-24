@@ -8,12 +8,8 @@ init:
 
 plan:
 	terraform -chdir="saas" plan || true
-	terraform -chdir="eks" plan
+	terraform -chdir="eks" plan -refresh=false
 .PHONY: plan
-
-sync:
-	argocd app sync dev-apps
-.PHONY: sync
 
 apply:
 	@ echo "Provisioning infrastructure..."

@@ -29,6 +29,7 @@ spec:
           image: traefik:v2.7
           args:
             - --accesslog
+            - --api.dashboard
             - --entrypoints.web.Address=:8000
             - --entrypoints.websecure.Address=:4443
             - --providers.kubernetescrd

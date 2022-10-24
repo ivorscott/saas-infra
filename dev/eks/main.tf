@@ -78,7 +78,6 @@ module "eks_blueprints_kubernetes_addons" {
   enable_argocd                       = true
   enable_aws_load_balancer_controller = true
   enable_external_dns                 = true
-  enable_traefik                      = true
 
   tags = local.tags
 }

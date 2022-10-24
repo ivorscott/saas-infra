@@ -7,6 +7,7 @@ variable "acm_certificate_domain" {
   description = "Route53 certificate domain."
   type        = string
 }
+
 variable "profile" {
   description = "The AWS profile to fetch credentials for."
   type = string
