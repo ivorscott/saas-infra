@@ -12,6 +12,8 @@ kind: IngressRoute
 metadata:
   name: admin
   namespace: default
+  labels:
+    app: traefik
 spec:
   entryPoints:
     - websecure
@@ -21,12 +23,19 @@ spec:
       services:
         - name: mic-admin-svc
           port: 4000
+    - match: Host(`admin-dev.devpie.io`) && PathPrefix(`/dashboard`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: api
   namespace: default
+  labels:
+    app: traefik
 spec:
   entryPoints:
     - websecure

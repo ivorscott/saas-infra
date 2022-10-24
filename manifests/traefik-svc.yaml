@@ -10,9 +10,6 @@ spec:
       name: web
       port: 8000
     - protocol: TCP
-      name: admin
-      port: 8080
-    - protocol: TCP
       name: websecure
       port: 443
   selector:
