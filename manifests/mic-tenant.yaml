@@ -20,6 +20,8 @@ spec:
             - containerPort: 4002
           imagePullPolicy: Always
           env:
+            - name: TENANT_WEB_PRODUCTION
+              value: "true"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
