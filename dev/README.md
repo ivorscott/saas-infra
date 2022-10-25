@@ -72,6 +72,18 @@ kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | 
 update your password to something else.
 
 9. Navigate to https://traefik-dev.devpie.io/dashboard/#/ to see the Traefik dashboard.
+The username is `saas-admin` and password is the decoded value of `.traefik.password`.
+
+   > __TIP__ You can reveal the traefik credentials from the generated secret. 
+   > ```bash 
+   > kubectl get secret traefik-secret -o json | jq '.data | map_values(@base64d)'
+   > {
+   >   "username": "************"
+   >   "password": "************"
+   > }
+   > ``` 
+   > However, this requires you to have [jq](https://stedolan.github.io/jq/) installed. 
+
 
 11. The SaaS administrator webapp is located at https://admin-dev.devpie.io. You should have received an email with a one time only password. 
 After logging in, you will be asked to change your password.
