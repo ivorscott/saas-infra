@@ -31,8 +31,6 @@ delete:
 .PHONY: delete
 
 destroy:
-	terraform -chdir="./dev/saas" destroy -auto-approve
-	terraform -chdir="./dev/eks" destroy \
-	-var eks_cluster_domain="" \
-	-var acm_certificate_domain="" -auto-approve
+	terraform -chdir="saas" destroy
+	terraform -chdir="eks" destroy
 .PHONY: destroy
