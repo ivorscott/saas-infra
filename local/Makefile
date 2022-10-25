@@ -1,11 +1,11 @@
 init: # initialize workspace
-	terraform -chdir="./saas" init
+	terraform -chdir="saas" init
 .PHONY: init
 
 apply: # build infrastructure
-	terraform -chdir="./saas" apply
+	terraform -chdir="saas" apply
 .PHONY: apply
 
 plan: # perform dry run
-	terraform -chdir="./saas" plan
+	terraform -chdir="saas" plan
 .PHONY: plan
