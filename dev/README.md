@@ -14,7 +14,7 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 
 __Cheatsheats__
 
-- [Debugging Tips](/debugging.md)
+- [Debugging Tips](./docs/debugging.md)
 
 ### Setup
 1. Configure your `~/.bash_profile` with AWS credentials.
