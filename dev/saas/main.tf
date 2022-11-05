@@ -7,6 +7,12 @@ terraform {
       version = "4.36.0"
     }
   }
+
+  backend "s3" {
+    bucket = "devpie.io-terraform"
+    key    = "dev/saas/terraform.tfstate"
+    region = "eu-central-1"
+  }
 }
 
 provider "aws" {
