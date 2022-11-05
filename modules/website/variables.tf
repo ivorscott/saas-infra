@@ -13,6 +13,12 @@ variable "stage" {
   description = "The deployment stage environment."
 }
 
+variable "force_delete" {
+  description = "Force delete s3 bucket."
+  type        = bool
+  default = false
+}
+
 variable "common_tags" {
   description = "Common tags you want applied to all components."
   default = {}

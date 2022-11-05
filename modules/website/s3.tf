@@ -1,6 +1,7 @@
 # S3 bucket for website.
 resource "aws_s3_bucket" "www_bucket" {
   bucket = "www.${var.stage}.${var.domain_name}"
+  force_destroy = var.force_delete
   tags = var.common_tags
 }
 
@@ -40,6 +41,7 @@ resource "aws_s3_bucket_website_configuration" "www_website_config" {
 # S3 bucket for redirecting non-www to www.
 resource "aws_s3_bucket" "root_bucket" {
   bucket = "${var.stage}.${var.domain_name}"
+  force_destroy = var.force_delete
   tags = var.common_tags
 }
 
