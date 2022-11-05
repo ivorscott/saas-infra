@@ -8,6 +8,13 @@ OIDC_PROVIDER_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluste
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 AWS_REGION=$(echo $AWS_DEFAULT_REGION)
 
+# Teardown the role and policy inorder to recreate them
+aws iam detach-role-policy \
+--role-name AmazonEKS_EBS_CSI_DriverRole \
+--policy-arn arn:aws:iam::554897346438:policy/AmazonEKS_EBS_CSI_Driver_Policy
+aws iam delete-policy --policy-arn arn:aws:iam::554897346438:policy/AmazonEKS_EBS_CSI_Driver_Policy
+aws iam delete-role --role-name AmazonEKS_EBS_CSI_DriverRole
+
 # Create an IAM policy named Amazon_EBS_CSI_Driver with permissions for worker nodes to create and modify Amazon EBS volumes.
 aws iam create-policy --policy-name AmazonEKS_EBS_CSI_Driver_Policy --policy-document file://ebs-iam-policy.json
 

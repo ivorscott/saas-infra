@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.0.0"
+  required_version = ">= 0.15.5, <= 1.3.3"
 
   required_providers {
     aws = {
@@ -16,10 +16,9 @@ terraform {
     }
   }
 
-  # ##  Used for end-to-end testing on project; update to suit your needs
-  # backend "s3" {
-  #   bucket = "terraform-ssp-github-actions-state"
-  #   region = "us-west-2"
-  #   key    = "e2e/eks-cluster-with-external-dns/terraform.tfstate"
-  # }
+  backend "s3" {
+    bucket = "devpie.io-terraform"
+    key    = "dev/eks/terraform.tfstate"
+    region = "eu-central-1"
+  }
 }
