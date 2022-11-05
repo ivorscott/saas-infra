@@ -36,4 +36,5 @@ module "rds" {
   source = "../../modules/rds"
   stage         = var.stage
   hostname      = var.hostname
+  instance_type = var.rds_instance_type
 }

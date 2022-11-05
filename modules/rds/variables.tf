@@ -10,6 +10,11 @@ variable "hostname" {
   type = string
 }
 
+variable "instance_type" {
+  description = "The RDS instance type."
+  type = string
+}
+
 variable "stage" {
   description = "The deployment stage."
   type = string

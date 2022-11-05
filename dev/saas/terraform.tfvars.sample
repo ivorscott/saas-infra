@@ -1,5 +1,6 @@
 profile  = ""
 region  = "eu-central-1"
 stage   = "local"
-hostname = "devpie.local"
-email   = ""
+hostname = "example.com"
+email   = "test@example.com"
+rds_instance_type = "db.t2.micro"

@@ -20,6 +20,10 @@ variable "email" {
 
 variable "hostname" {
   description = "The SaaS hostname."
-  default = "example.com"
+  type = string
+}
+
+variable "rds_instance_type" {
+  description = "The RDS instance type."
   type = string
 }
