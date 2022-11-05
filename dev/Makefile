@@ -1,14 +1,18 @@
-init: # initialize workspace
+
+.DEFAULT_GOAL := help
+
+init: ;@ ## Initialize workspace
 	terraform -chdir="saas" init
 	terraform -chdir="eks" init
 .PHONY: init
 
-plan: # perform dry run
+plan: ;@ ## Perform dry run
 	terraform -chdir="saas" plan || true
-	terraform -chdir="eks" plan -refresh=false # -refresh=false is a workaround for bug https://github.com/aws-ia/terraform-aws-eks-blueprints/issues/762
+	terraform -chdir="eks" plan -refresh=false # -refresh=false fixes issue
+	# https://github.com/aws-ia/terraform-aws-eks-blueprints/issues/762
 .PHONY: plan
 
-apply: # build infrastructure
+apply: ;@ ## Build infrastructure
 	@ echo "Provisioning infrastructure..."
 
 	terraform -chdir="saas" apply || true
@@ -23,13 +27,25 @@ apply: # build infrastructure
 	@ cd ..; ./scripts/create-argocd-app.sh
 .PHONY: dev
 
-delete: # delete argocd application
+delete: ;@ ## Delete argocd application
 	argocd app delete dev-apps --cascade
 .PHONY: delete
 
-destroy: # destroy infrastructure
+destroy: ;@ ## Destroy infrastructure
 	terraform -chdir="saas" destroy
 	terraform -chdir="eks" destroy -target="module.eks_blueprints_kubernetes_addons" -auto-approve
 	terraform -chdir="eks" destroy -target="module.eks_blueprints" -auto-approve
 	terraform -chdir="eks" destroy -auto-approve
 .PHONY: destroy
+
+help:
+	@echo
+	@echo "- Setup Instructions -"
+	@echo
+	@echo 1. make init
+	@echo 2. make plan
+	@echo 3. make apply
+	@echo
+	@grep -hE '^[ a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+.PHONY: help
