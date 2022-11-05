@@ -6,7 +6,7 @@ resource "aws_s3_bucket" "www_bucket" {
 
 resource "aws_s3_bucket_policy" "www_bucket_policy" {
   bucket = aws_s3_bucket.www_bucket.bucket
-  policy = templatefile("s3-policy.json", { bucket = "www.${var.stage}.${var.domain_name}" })
+  policy = templatefile("${path.module}/s3-policy.json", { bucket = "www.${var.stage}.${var.domain_name}" })
 }
 
 resource "aws_s3_bucket_acl" "www_bucket_acl" {
@@ -45,7 +45,7 @@ resource "aws_s3_bucket" "root_bucket" {
 
 resource "aws_s3_bucket_policy" "root_bucket_policy" {
   bucket = aws_s3_bucket.root_bucket.bucket
-  policy = templatefile("s3-policy.json", { bucket = "${var.stage}.${var.domain_name}" })
+  policy = templatefile("${path.module}/s3-policy.json", { bucket = "${var.stage}.${var.domain_name}" })
 }
 
 resource "aws_s3_bucket_acl" "root_bucket_acl" {
