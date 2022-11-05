@@ -1,27 +1,18 @@
 # Website
 
-## Input
+This terraform module setups a static website using S3, ACM, Route53 and Cloudfront.
+
+![](docs/arch.png)
+
+## Usage
 ```terraform
-variable "region" {
-  type        = string
-  description = "The AWS region."
-}
-
-variable "domain_name" {
-    type        = string
-    description = "The domain name for the website."
-}
-
-variable "stage" {
-    type        = string
-    description = "The deployment stage environment."
-}
-
-variable "common_tags" {
-    description = "Common tags you want applied to all components."
+module "website" {
+  source = "github.com/devpies/saas-infra//modules/website?ref=main"
+  stage = "dev"
+  region = "eu-central-1"
+  domain_name = "example.com"
+  common_tags = { stage = dev } # optional
 }
 ```
 
-## Output 
-
-N/A
+[source: alexhyett](https://www.alexhyett.com/terraform-s3-static-website-hosting)
