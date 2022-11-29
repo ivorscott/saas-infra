@@ -16,7 +16,7 @@ aws iam delete-policy --policy-arn arn:aws:iam::554897346438:policy/AmazonEKS_EB
 aws iam delete-role --role-name AmazonEKS_EBS_CSI_DriverRole
 
 # Create an IAM policy named Amazon_EBS_CSI_Driver with permissions for worker nodes to create and modify Amazon EBS volumes.
-aws iam create-policy --policy-name AmazonEKS_EBS_CSI_Driver_Policy --policy-document file://ebs-iam-policy.json
+aws iam create-policy --policy-name AmazonEKS_EBS_CSI_Driver_Policy --policy-document file://ebs-iam-policy.json --no-cli-pager
 
 # Create the IAM trust policy file
 cat << EoF > trust-policy.json
@@ -42,7 +42,7 @@ EoF
 # Create an IAM role
 aws iam create-role \
 --role-name AmazonEKS_EBS_CSI_DriverRole \
---assume-role-policy-document file://trust-policy.json
+--assume-role-policy-document file://trust-policy.json --no-cli-pager
 
 # Attach new IAM policy to the role
 aws iam attach-role-policy \

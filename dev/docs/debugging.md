@@ -32,3 +32,8 @@ __Get Base64 encoded secret and decode it (requires jq)__
 ```bash
 kubectl get secret traefik-secret -o json | jq '.data | map_values(@base64d)'
 ```
+
+__Create a pod to debug a node__
+```bash
+kubectl debug node/<node name> -it --image=ubuntu
+```

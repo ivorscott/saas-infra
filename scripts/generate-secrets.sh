@@ -42,7 +42,7 @@ data:
   password: $password
 EoF
 
-cd dev/saas
+cd $1/saas
 
 ## Generate the Cognito secrets
 echo "Generating Cognito secrets..."

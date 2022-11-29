@@ -1,5 +1,5 @@
-	#!/bin/bash
-  # This script automates ArgoCD app creation and deployment.
+#!/bin/bash
+# This script automates ArgoCD app creation and deployment.
 
 argocd app create dev-apps \
 --dest-namespace default  \

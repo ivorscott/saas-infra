@@ -7,12 +7,15 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 
 #### Dev Requirements
 - aws account
+- s3 bucket for terraform state named: `devpie.io-terraform`
+- github personal access token with `read:packages` scope
 - install [terraform](https://www.terraform.io/) <= 1.3.5
 - route53 hosted zone 
 - existing domain in hosted zone
 - install [argocd cli](https://argo-cd.readthedocs.io/en/stable/getting_started/#2-download-argo-cd-cli)
 - install [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- github personal access token with `read:packages` scope
+- install [pgcli](https://www.pgcli.com/install)
+- install [jq](https://stedolan.github.io/jq/)
 
 __Cheatsheats__
 
@@ -59,10 +62,25 @@ This is used to access the basic auth protected Traefik dashboard.
 6. Provision the infrastructure.
 
 ```bash
-cd dev
-make init
-make plan
-make apply
+$ make
+
+- Setup Instructions -
+
+1. make init
+2. make plan-eks
+3. make apply-eks
+4. make plan-saas
+5. make apply-saas
+6. make setup
+
+init                 Initialize workspace
+plan-eks             Perform eks dry run
+plan-saas            Perform saas dry run
+apply-eks            Build eks infrastructure
+apply-saas           Build saas infrastructure
+setup                Execute post infrastructure setup scripts
+delete               Delete argocd application
+destroy              Destroy infrastructure
 ```
 
 7. Find and copy the initial password for the ArgoCD UI.
@@ -70,7 +88,7 @@ make apply
 kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 ```
 
-8. Navigate to the ArgoCD UI: https://argocd-dev.devpie.io. Login with the copied initial password; the username is `admin`. Once logged in, 
+8. Navigate to the ArgoCD UI: `http://localhost:8080` or `https://argocd-dev.devpie.io`. Login with the copied initial password; the username is `admin`. Once logged in, 
 update your password to something else.
 
 9. Navigate to https://traefik-dev.devpie.io/dashboard/#/ to see the Traefik dashboard.
