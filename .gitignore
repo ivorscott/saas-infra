@@ -8,3 +8,4 @@ manifests/ghcr-secret.yaml
 trust-policy.json
 .ghcr.token
 .traefik.password
+.DS_Store
