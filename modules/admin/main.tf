@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.3.3"
+  required_version = ">= 0.15.5, <= 1.3.5"
 }
 
 data "aws_caller_identity" "current" {}

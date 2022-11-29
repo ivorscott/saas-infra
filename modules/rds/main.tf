@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.3.3"
+  required_version = ">= 0.15.5, <= 1.3.5"
 }
 
 locals {
@@ -11,10 +11,28 @@ locals {
   }
 }
 
-################################################################################
-# Supporting Resources
-################################################################################
+/*
+ * Receive existing vpc resource.
+ *
+ * We require the vpc id of the vpc containing the eks cluster. This is
+ * required for vpc peering.
+ */
+data aws_vpc "eks" {
+  id = "dev"
+}
 
+/**
+ * Make AWS account id available.
+ *
+ * This is usually required by vpc peering.
+ */
+data aws_caller_identity "current" {}
+
+/**
+ * VPC.
+ *
+ * The dedicated VPC for rds instances.
+ */
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
@@ -33,6 +51,11 @@ module "vpc" {
   tags = local.tags
 }
 
+/**
+ * Security Group.
+ *
+ * The default security group for rds instances.
+ */
 module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
@@ -55,10 +78,57 @@ module "security_group" {
   tags = local.tags
 }
 
-################################################################################
-# RDS Module
-################################################################################
+/**
+ * VPC peering connection.
+ *
+ * Establishes a relationship resource between the "eks" and "rds" VPCs.
+ */
+resource "aws_vpc_peering_connection" "eks2rds" {
+  # The AWS Account ID.
+  peer_owner_id = data.aws_caller_identity.current.account_id
 
+  # Thee VPC ID for EKS resources.
+  vpc_id        =  data.aws_vpc.eks.id
+
+  # The VPC ID for RDS resources.
+  peer_vpc_id   = module.vpc.vpc_id
+  # Flags that the peering connection should be automatically confirmed. This
+  # only works if both VPCs are owned by the same account.
+  auto_accept = true
+}
+
+/**
+ * Route rule.
+ *
+ * Creates a new route rule on the "eks" VPC main route table. All requests
+ * to the "rds" VPC's IP range will be directed to the VPC peering
+ * connection.
+ */
+resource "aws_route" "eks2rds" {
+  route_table_id = data.aws_vpc.eks.main_route_table_id
+  destination_cidr_block = module.vpc.vpc_cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.eks2rds.id
+}
+
+/**
+ * Route rule.
+ *
+ * Creates a new route rule on the "rds" VPC main route table. All requests
+ * to the "eks" VPC's IP range will be directed to the VPC peering
+ * connection.
+ */
+resource "aws_route" "rds2eks" {
+  route_table_id = module.vpc.vpc_main_route_table_id
+  destination_cidr_block = data.aws_vpc.eks.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.eks2rds.id
+}
+
+
+/**
+ * RDS database.
+ *
+ * This is the users database.
+ */
 module "db_users" {
   source  = "terraform-aws-modules/rds/aws"
 
@@ -93,6 +163,11 @@ module "db_users" {
   tags = local.tags
 }
 
+/**
+ * RDS database.
+ *
+ * This is the projects database.
+ */
 module "db_projects" {
   source  = "terraform-aws-modules/rds/aws"
 
@@ -127,6 +202,11 @@ module "db_projects" {
   tags = local.tags
 }
 
+/**
+ * RDS database.
+ *
+ * This is the admin database.
+ */
 module "db_admin" {
   source  = "terraform-aws-modules/rds/aws"
 

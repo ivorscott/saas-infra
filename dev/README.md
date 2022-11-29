@@ -6,6 +6,8 @@ The dev environment is expensive and not necessary for local development.
 It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 
 #### Dev Requirements
+- aws account
+- install [terraform](https://www.terraform.io/) <= 1.3.5
 - route53 hosted zone 
 - existing domain in hosted zone
 - install [argocd cli](https://argo-cd.readthedocs.io/en/stable/getting_started/#2-download-argo-cd-cli)
@@ -17,13 +19,13 @@ __Cheatsheats__
 - [Debugging Tips](./docs/debugging.md)
 
 ### Setup
-1. Configure your `~/.bash_profile` with AWS credentials.
+1. Configure your `~/.bash_profile` or `~/.zprofile` with AWS credentials.
     ```bash
     export AWS_ACCESS_KEY_ID=<YourAccessKeyID>
     export AWS_SECRET_ACCESS_KEY=<YourSecretAccessKey>
     export AWS_DEFAULT_REGION=<YourDefaultRegion>
     ```
-    Apply the changes by executing `source ~/.bash_profile` in your terminal.
+    Apply the changes by executing `source ~/.bash_profile` or `source ~/.zprofile` in your terminal.
 
 
 2. Create a named profile. 
