@@ -1,12 +1,14 @@
 #!/bin/bash
 # This script automates the deployment of the Amazon EBS CSI driver.
 
-cd dev/eks
+cd $1
 
-CLUSTER_NAME=$(terraform output -raw eks_cluster_name)
+CLUSTER_NAME=$(terraform -chdir="eks" output -raw eks_cluster_name)
 OIDC_PROVIDER_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 AWS_REGION=$(echo $AWS_DEFAULT_REGION)
+
+cd ..
 
 # Teardown the role and policy inorder to recreate them
 aws iam detach-role-policy \
@@ -15,11 +17,41 @@ aws iam detach-role-policy \
 aws iam delete-policy --policy-arn arn:aws:iam::554897346438:policy/AmazonEKS_EBS_CSI_Driver_Policy
 aws iam delete-role --role-name AmazonEKS_EBS_CSI_DriverRole
 
+
+cat > ./scripts/gen/ebs-iam-policy.json <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:AttachVolume",
+        "ec2:CreateSnapshot",
+        "ec2:CreateTags",
+        "ec2:CreateVolume",
+        "ec2:DeleteSnapshot",
+        "ec2:DeleteTags",
+        "ec2:DeleteVolume",
+        "ec2:DescribeAvailabilityZones",
+        "ec2:DescribeInstances",
+        "ec2:DescribeSnapshots",
+        "ec2:DescribeTags",
+        "ec2:DescribeVolumes",
+        "ec2:DescribeVolumesModifications",
+        "ec2:DetachVolume",
+        "ec2:ModifyVolume"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+
 # Create an IAM policy named Amazon_EBS_CSI_Driver with permissions for worker nodes to create and modify Amazon EBS volumes.
-aws iam create-policy --policy-name AmazonEKS_EBS_CSI_Driver_Policy --policy-document file://ebs-iam-policy.json --no-cli-pager
+aws iam create-policy --policy-name AmazonEKS_EBS_CSI_Driver_Policy --policy-document file://scripts/gen/ebs-iam-policy.json --no-cli-pager
 
 # Create the IAM trust policy file
-cat << EoF > trust-policy.json
+cat > ./scripts/gen/trust-policy.json <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -37,12 +69,12 @@ cat << EoF > trust-policy.json
     }
   ]
 }
-EoF
+EOF
 
 # Create an IAM role
 aws iam create-role \
 --role-name AmazonEKS_EBS_CSI_DriverRole \
---assume-role-policy-document file://trust-policy.json --no-cli-pager
+--assume-role-policy-document file://scripts/gen/trust-policy.json --no-cli-pager
 
 # Attach new IAM policy to the role
 aws iam attach-role-policy \

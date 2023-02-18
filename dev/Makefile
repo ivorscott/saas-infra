@@ -6,60 +6,58 @@ init: ;@ ## Initialize workspace
 	terraform -chdir="saas" init
 .PHONY: init
 
-plan-eks: ;@ ## Perform eks dry run
-	terraform -chdir="eks" plan -refresh=false
-	@ # -refresh=false fixes issue https://github.com/aws-ia/terraform-aws-eks-blueprints/issues/762
-.PHONY: plan-eks
+plan: ;@ ## Perform eks dry run
+	terraform -chdir="eks" plan
+	terraform -chdir="sass" plan
+.PHONY: plan
 
-plan-saas: ;@ ## Perform saas dry run
-	terraform -chdir="saas" plan
-.PHONY: plan-saas
-
-apply-eks: ;@ ## Build eks infrastructure
+apply: ;@ ## Build eks infrastructure
 	@ echo "Provisioning infrastructure..."
 	terraform -chdir="eks" apply
-.PHONY: apply-eks
 
-apply-saas: ;@ ## Build saas infrastructure
-	@ echo "Provisioning infrastructure..."
-	terraform -chdir="saas" apply
-.PHONY: apply-saas
+	$1=$(shell terraform -chdir="eks" output -raw vpc_id); \
+	$2=$(shell terraform -chdir="eks" output -raw vpc_cidr_block); \
+	$3=$(shell terraform -chdir="eks" output -raw database_subnet_group); \
+	$4=$(shell terraform -chdir="eks" output -raw cluster_security_group_id); \
+	terraform -chdir="saas" apply \
+	-var="vpc_id=$$1" \
+	-var="vpc_cidr_block=$$2" \
+	-var="database_subnet_group=$$3" \
+	-var="cluster_security_group_id=$$4"
+.PHONY: apply
 
-setup: ;@ ## Execute post infrastructure setup scripts
+
+scripts: ;@ ## Execute post infrastructure setup scripts
 	@ CLUSTER_NAME=$(shell terraform -chdir="eks" output -raw eks_cluster_name); \
 	aws eks --region $$AWS_DEFAULT_REGION update-kubeconfig --name $$CLUSTER_NAME
 
+	@cd ..; ./scripts/security-group-for-pods.sh dev
 	@cd ..; ./scripts/generate-secrets.sh dev
-	@cd ..; ./scripts/install-ebs-csi-driver.sh
+	@cd ..; ./scripts/install-ebs-csi-driver.sh dev
 	@cd ..; ./scripts/argocd-login.sh
 	@cd ..; ./scripts/create-argocd-app.sh
-.PHONY: setup
+.PHONY: scripts
 
-destroy-apps: ;@ ## Destroy argocd application
+delete: ;@ ## Delete argocd application
 	@cd ..; ./scripts/argocd-login.sh
 	argocd app delete dev-apps --cascade
-.PHONY: destroy-apps
+.PHONY: delete
 
-destroy-saas: ;@ ## Destroy saas infrastructure
+destroy: ;@ ## Destroy infrastructure
 	terraform -chdir="saas" destroy
-.PHONY: destroy-saas
-
-destroy-eks: ;@ ## Destroy eks infrastructure
 	terraform -chdir="eks" destroy -target="module.eks_blueprints_kubernetes_addons" -auto-approve
 	terraform -chdir="eks" destroy -target="module.eks_blueprints" -auto-approve
 	terraform -chdir="eks" destroy -auto-approve
-.PHONY: destroy-eks
+.PHONY: destroy
 
 help:
 	@echo
 	@echo "- Setup Instructions -"
 	@echo
 	@echo 1. make init
-	@echo 2. make plan-eks
-	@echo 3. make apply-eks
-	@echo 4. make plan-saas
-	@echo 5. make apply-saas
-	@echo 6. make setup
+	@echo 2. make plan
+	@echo 3. make apply
+	@echo 4. make scripts
 	@echo
 	@grep -hE '^[ a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

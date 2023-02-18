@@ -1,3 +1,7 @@
+output "sg_rds_access" {
+  value = aws_security_group.rds_access.id
+}
+
 output "db_users_instance_address" {
   description = "The address of the RDS instance"
   value       = module.db_users.db_instance_address

@@ -19,3 +19,23 @@ variable "stage" {
   description = "The deployment stage."
   type = string
 }
+
+variable "vpc_id" {
+  description = "The VPC ID"
+  type = string
+}
+
+variable "vpc_cidr_block" {
+  description = "The VPC CIDR block"
+  type = string
+}
+
+variable "database_subnet_group" {
+  description = "The VPC database subnet group"
+  type = string
+}
+
+variable "cluster_security_group_id" {
+  description = "The EKS cluster security group id"
+  type = string
+}

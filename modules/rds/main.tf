@@ -6,34 +6,9 @@ locals {
   name = "postgres"
   region = var.region
   tags = {
-    Owner       = "user"
+    Owner       = "user_a"
     Environment = var.stage
   }
-}
-
-/**
- * VPC.
- *
- * The dedicated VPC for rds instances.
- */
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.0"
-
-  name = local.name
-  cidr = "10.99.0.0/18"
-
-  azs              = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  public_subnets   = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
-  private_subnets  = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
-  database_subnets = ["10.99.7.0/24", "10.99.8.0/24", "10.99.9.0/24"]
-
-  create_database_subnet_group       = true
-  create_database_subnet_route_table = true
-  enable_dns_support = true
-  enable_dns_hostnames = true
-
-  tags = local.tags
 }
 
 /**
@@ -41,36 +16,81 @@ module "vpc" {
  *
  * The default security group for rds instances.
  */
-module "security_group" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 4.0"
+resource "aws_security_group" "rds" {
+  name        = "rds-access-from-pod-${var.stage}"
+  description = "Allow RDS Access from Kubernetes Pods"
+  vpc_id      = var.vpc_id
 
-  name        = local.name
-  description = "Complete PostgreSQL example security group"
-  vpc_id      = module.vpc.vpc_id
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = var.vpc_cidr_block
+    security_groups = [aws_security_group.rds_access.id]
+  }
 
-  # ingress
-  ingress_with_cidr_blocks = [
-    {
-      from_port   = 5432
-      to_port     = 5432
-      protocol    = "tcp"
-      description = "PostgreSQL access from within VPC"
-      cidr_blocks = module.vpc.vpc_cidr_block
-    },
-  ]
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = var.vpc_cidr_block
+    security_groups = [aws_security_group.rds_access.id]
+  }
 
-  egress_with_cidr_blocks = [
-    {
-      from_port   = 5432
-      to_port     = 5432
-      protocol    = "tcp"
-      description = "PostgreSQL access from within VPC"
-      cidr_blocks = module.vpc.vpc_cidr_block
-    },
-  ]
+  tags = {
+    Name        = "rds-sg-${var.stage}"
+    Environment = var.stage
+  }
+}
 
-  tags = local.tags
+resource "aws_security_group" "rds_access" {
+  name        = "rds-access-from-pod-${var.stage}"
+  description = "Allow RDS Access from Kubernetes Pods"
+  vpc_id      = var.vpc_id
+
+  # allow POD SG to connect to traefik
+  ingress {
+    from_port = 8000
+    to_port   = 8000
+    protocol  = "tcp"
+    self      = true
+  }
+
+  # allow POD SG to connect to traefik
+  ingress {
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
+    self      = true
+  }
+
+  # allow POD SG to connect to NODE GROUP SG using TCP 53
+  ingress {
+    from_port       = 53
+    to_port         = 53
+    protocol        = "tcp"
+    security_groups = [var.cluster_security_group_id]
+  }
+
+  # allow POD SG to connect to NODE GROUP SG using UDP 53
+  ingress {
+    from_port       = 53
+    to_port         = 53
+    protocol        = "udp"
+    security_groups = [var.cluster_security_group_id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "rds-access-from-pod-${var.stage}"
+    Environment = var.stage
+  }
 }
 
 /**
@@ -102,8 +122,8 @@ module "db_users" {
   username = "devpie_admin"
   port     = 5432
 
-  db_subnet_group_name   = module.vpc.database_subnet_group
-  vpc_security_group_ids = [module.security_group.security_group_id]
+  db_subnet_group_name   = var.database_subnet_group
+  vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible = true
   maintenance_window      = "Mon:00:00-Mon:03:00"
   backup_window           = "03:00-06:00"
@@ -141,8 +161,8 @@ module "db_projects" {
   username = "devpie_admin"
   port     = 5432
 
-  db_subnet_group_name   = module.vpc.database_subnet_group
-  vpc_security_group_ids = [module.security_group.security_group_id]
+  db_subnet_group_name   = var.database_subnet_group
+  vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible = true
   maintenance_window      = "Mon:00:00-Mon:03:00"
   backup_window           = "03:00-06:00"
@@ -180,8 +200,8 @@ module "db_admin" {
   username = "devpie_admin"
   port     = 5432
 
-  db_subnet_group_name   = module.vpc.database_subnet_group
-  vpc_security_group_ids = [module.security_group.security_group_id]
+  db_subnet_group_name   = var.database_subnet_group
+  vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible = true
   maintenance_window      = "Mon:00:00-Mon:03:00"
   backup_window           = "03:00-06:00"

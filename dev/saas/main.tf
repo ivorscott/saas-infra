@@ -1,20 +1,3 @@
-terraform {
-  required_version = ">= 0.15.5, <= 1.3.5"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "4.36.0"
-    }
-  }
-
-  backend "s3" {
-    bucket = "devpie.io-terraform"
-    key    = "dev/saas/terraform.tfstate"
-    region = "eu-central-1"
-  }
-}
-
 provider "aws" {
   region = var.region
   profile = var.profile
@@ -40,7 +23,11 @@ module "tenant" {
 
 module "rds" {
   source = "../../modules/rds"
-  stage         = var.stage
-  hostname      = var.hostname
-  instance_type = var.rds_instance_type
+  stage                     = var.stage
+  hostname                  = var.hostname
+  instance_type             = var.rds_instance_type
+  vpc_id                    = var.vpc_id
+  vpc_cidr_block            = var.vpc_cidr_block
+  database_subnet_group     = var.database_subnet_group
+  cluster_security_group_id = var.cluster_security_group_id
 }

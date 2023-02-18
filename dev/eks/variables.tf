@@ -12,3 +12,13 @@ variable "profile" {
   description = "The AWS profile to fetch credentials for."
   type = string
 }
+
+variable "region" {
+  description = "The AWS region."
+  type = string
+}
+
+variable "stage" {
+  description = "The deployment stage."
+  type = string
+}

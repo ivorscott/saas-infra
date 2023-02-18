@@ -1,5 +1,5 @@
 provider "aws" {
-  region = local.region
+  region = var.region
   profile = var.profile
 }
 
@@ -26,14 +26,10 @@ data "aws_acm_certificate" "issued" {
   statuses = ["ISSUED"]
 }
 
-data "aws_availability_zones" "available" {}
-
 locals {
   name   = basename(path.cwd)
-  region = "eu-central-1"
-
-  vpc_cidr = "10.0.0.0/16"
-  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+  iam_role = "eks-service-role"
+  vpc_cidr =  "10.99.0.0/18"
 
   tags = {
     Blueprint  = local.name
@@ -48,11 +44,16 @@ locals {
 module "eks_blueprints" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.13.0"
 
-  cluster_name    = local.name
-  cluster_version = "1.23"
+  cluster_name       = local.name
+  cluster_version    = "1.24"
 
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
+  create_iam_role    = true
+  iam_role_name      = local.iam_role
+  iam_role_additional_policies = [
+    "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  ]
 
   managed_node_groups = {
     mg_5 = {
@@ -61,6 +62,7 @@ module "eks_blueprints" {
       min_size        = 2
       subnet_ids      = module.vpc.private_subnets
     }
+
   }
 
   tags = local.tags
@@ -104,6 +106,12 @@ module "eks_blueprints_kubernetes_addons" {
   tags = local.tags
 }
 
+# Extend default EKS role
+resource "aws_iam_role_policy_attachment" "eks-AmazonEKSVPCResourceController" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = module.eks_blueprints.managed_node_group_iam_role_names[0]
+}
+
 #---------------------------------------------------------------
 # Supporting Resources
 #---------------------------------------------------------------
@@ -115,13 +123,17 @@ module "vpc" {
   name = local.name
   cidr = local.vpc_cidr
 
-  azs             = local.azs
-  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
-  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 10)]
+  azs              = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  public_subnets   = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
+  private_subnets  = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
+  database_subnets = ["10.99.7.0/24", "10.99.8.0/24", "10.99.9.0/24"]
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
-  enable_dns_hostnames = true
+  enable_nat_gateway                 = true
+  single_nat_gateway                 = true
+  create_database_subnet_group       = true
+  create_database_subnet_route_table = true
+  enable_dns_support                 = true
+  enable_dns_hostnames               = true
 
   # Manage so we can name
   manage_default_network_acl    = true

@@ -14,6 +14,10 @@ output "tenant_app_client_id" {
   value = module.tenant.app_client_id
 }
 
+output "postgres_instance_id_users" {
+  value = module.rds.db_users_instance_id
+}
+
 output "postgres_hostname_users" {
   value = module.rds.db_users_instance_address
 }
@@ -26,6 +30,10 @@ output "postgres_username_users" {
 output "postgres_password_users" {
   value = module.rds.db_users_instance_password
   sensitive = true
+}
+
+output "postgres_instance_id_projects" {
+  value = module.rds.db_projects_instance_id
 }
 
 output "postgres_hostname_projects" {
@@ -42,6 +50,10 @@ output "postgres_password_projects" {
   sensitive = true
 }
 
+output "postgres_instance_id_admin" {
+  value = module.rds.db_admin_instance_id
+}
+
 output "postgres_hostname_admin" {
   value = module.rds.db_admin_instance_address
 }
@@ -54,4 +66,8 @@ output "postgres_username_admin" {
 output "postgres_password_admin" {
   value = module.rds.db_admin_instance_password
   sensitive = true
+}
+
+output "sg_rds_access" {
+  value = module.rds.sg_rds_access
 }

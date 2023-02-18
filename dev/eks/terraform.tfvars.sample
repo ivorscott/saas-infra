@@ -1,3 +1,5 @@
-profile  = ""
-acm_certificate_domain ="*.example.com"
+profile = ""
+acm_certificate_domain = "*.example.com"
 eks_cluster_domain = "example.com"
+region = "eu-central-1"
+stage = "local"
