@@ -8,7 +8,7 @@ init: ;@ ## Initialize workspace
 
 plan: ;@ ## Perform eks dry run
 	terraform -chdir="eks" plan
-	terraform -chdir="sass" plan
+	terraform -chdir="saas" plan
 .PHONY: plan
 
 apply: ;@ ## Build eks infrastructure
@@ -25,7 +25,6 @@ apply: ;@ ## Build eks infrastructure
 	-var="database_subnet_group=$$3" \
 	-var="cluster_security_group_id=$$4"
 .PHONY: apply
-
 
 scripts: ;@ ## Execute post infrastructure setup scripts
 	@ CLUSTER_NAME=$(shell terraform -chdir="eks" output -raw eks_cluster_name); \

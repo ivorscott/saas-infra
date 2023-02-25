@@ -29,5 +29,6 @@ output "cluster_security_group_id" {
 }
 
 output "web_identity_role_arn" {
+  description = "The web identity based IAM role used by pods"
   value = aws_iam_role.web_identity_role.arn
 }
