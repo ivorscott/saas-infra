@@ -6,7 +6,6 @@ locals {
   name = "postgres"
   region = var.region
   tags = {
-    Owner       = "user_a"
     Environment = var.stage
   }
 }

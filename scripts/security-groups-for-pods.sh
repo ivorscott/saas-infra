@@ -68,7 +68,6 @@ metadata:
   name: devpie
 EOF
 
-
 # Deploy an Amazon EKS SecurityGroupPolicy to your cluster.
 cat > ./scripts/gen/security-group-policy.yaml <<EOF
 apiVersion: vpcresources.k8s.aws/v1beta1
