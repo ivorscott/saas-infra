@@ -77,7 +77,12 @@ module "eks_blueprints_kubernetes_addons" {
   eks_cluster_version  = module.eks_blueprints.eks_cluster_version
   eks_cluster_domain   = var.eks_cluster_domain
 
-  enable_argocd                       = true
+  enable_argocd                        = true
+  enable_aws_load_balancer_controller  = true
+  enable_external_dns                  = true
+  enable_amazon_eks_vpc_cni            = true
+  enable_amazon_eks_aws_ebs_csi_driver = true
+
   argocd_helm_config = {
     name             = "argo-cd"
     chart            = "argo-cd"
@@ -88,10 +93,6 @@ module "eks_blueprints_kubernetes_addons" {
     create_namespace = false
     values = [templatefile("${path.module}/argocd-values.yaml", {
       set_values = [
-        # {
-        #   name  = "configs.params.server.insecure"
-        #   value = true
-        # },
         {
           name  = "server.extraArgs[0]"
           value = "--insecure"
@@ -100,8 +101,6 @@ module "eks_blueprints_kubernetes_addons" {
     })]
   }
 
-  enable_aws_load_balancer_controller = true
-  enable_external_dns                 = true
 
   tags = local.tags
 }

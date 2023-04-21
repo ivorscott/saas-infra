@@ -13,33 +13,32 @@ plan: ;@ ## Perform eks dry run
 
 apply: ;@ ## Build eks infrastructure
 	@ echo "Provisioning infrastructure..."
-	terraform -chdir="eks" apply
+	@#terraform -chdir="eks" apply
 
-	$1=$(shell terraform -chdir="eks" output -raw vpc_id); \
-	$2=$(shell terraform -chdir="eks" output -raw vpc_cidr_block); \
-	$3=$(shell terraform -chdir="eks" output -raw database_subnet_group); \
-	$4=$(shell terraform -chdir="eks" output -raw cluster_security_group_id); \
+	@v1=$(shell terraform -chdir="eks" output -raw vpc_id); \
+	v2=$(shell terraform -chdir="eks" output -raw vpc_cidr_block); \
+	v3=$(shell terraform -chdir="eks" output -raw database_subnet_group); \
+	v4=$(shell terraform -chdir="eks" output -raw cluster_security_group_id); \
 	terraform -chdir="saas" apply \
-	-var="vpc_id=$$1" \
-	-var="vpc_cidr_block=$$2" \
-	-var="database_subnet_group=$$3" \
-	-var="cluster_security_group_id=$$4"
+	-var="vpc_id=$$v1" \
+	-var="vpc_cidr_block=$$v2" \
+	-var="database_subnet_group=$$v3" \
+	-var="cluster_security_group_id=$$v4"
 .PHONY: apply
 
 scripts: ;@ ## Execute post infrastructure setup scripts
 	@ CLUSTER_NAME=$(shell terraform -chdir="eks" output -raw eks_cluster_name); \
-	aws eks --region $$AWS_DEFAULT_REGION update-kubeconfig --name $$CLUSTER_NAME
+	aws eks --region $$AWS_DEFAULT_REGION update-kubeconfig --name $$CLUSTER_NAME;
 
-	@cd ..; ./scripts/security-group-for-pods.sh dev
+	@cd ..; ./scripts/security-groups-for-pods.sh dev
 	@cd ..; ./scripts/generate-secrets.sh dev
-	@cd ..; ./scripts/install-ebs-csi-driver.sh dev
 	@cd ..; ./scripts/argocd-login.sh
 	@cd ..; ./scripts/create-argocd-app.sh
 .PHONY: scripts
 
 delete: ;@ ## Delete argocd application
 	@cd ..; ./scripts/argocd-login.sh
-	argocd app delete dev-apps --cascade
+	argocd --port-forward app delete dev-apps --cascade
 .PHONY: delete
 
 destroy: ;@ ## Destroy infrastructure

@@ -35,7 +35,7 @@ variable "vpc_id" {
 
 variable "vpc_cidr_block" {
   description = "The VPC CIDR block"
-  type = list(string)
+  type = string
 }
 
 variable "database_subnet_group" {

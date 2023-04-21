@@ -16,15 +16,15 @@ locals {
  * The default security group for rds instances.
  */
 resource "aws_security_group" "rds" {
-  name        = "rds-access-from-pod-${var.stage}"
-  description = "Allow RDS Access from Kubernetes Pods"
+  name        = "rds-sg-${var.stage}"
+  description = "Default RDS Security Group"
   vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = var.vpc_cidr_block
+    cidr_blocks = [var.vpc_cidr_block]
     security_groups = [aws_security_group.rds_access.id]
   }
 
@@ -32,7 +32,7 @@ resource "aws_security_group" "rds" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = var.vpc_cidr_block
+    cidr_blocks = [var.vpc_cidr_block]
     security_groups = [aws_security_group.rds_access.id]
   }
 
@@ -118,7 +118,7 @@ module "db_users" {
   # "Error creating DB Instance: InvalidParameterValue: MasterUsername
   # user cannot be used as it is a reserved word used by the engine"
   db_name  = "users"
-  username = "devpie_admin"
+  username = "dbuser"
   port     = 5432
 
   db_subnet_group_name   = var.database_subnet_group
@@ -157,7 +157,7 @@ module "db_projects" {
   # "Error creating DB Instance: InvalidParameterValue: MasterUsername
   # user cannot be used as it is a reserved word used by the engine"
   db_name  = "projects"
-  username = "devpie_admin"
+  username = "dbuser"
   port     = 5432
 
   db_subnet_group_name   = var.database_subnet_group
@@ -196,7 +196,7 @@ module "db_admin" {
   # "Error creating DB Instance: InvalidParameterValue: MasterUsername
   # user cannot be used as it is a reserved word used by the engine"
   db_name  = "saas_admin"
-  username = "devpie_admin"
+  username = "dbuser"
   port     = 5432
 
   db_subnet_group_name   = var.database_subnet_group

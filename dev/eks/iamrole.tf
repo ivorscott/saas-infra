@@ -1,12 +1,5 @@
-data "tls_certificate" "cert" {
-  url = module.eks_blueprints.eks_oidc_issuer_url
-}
-
-resource "aws_iam_openid_connect_provider" "openid" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.cert.certificates[0].sha1_fingerprint]
-  url             = module.eks_blueprints.eks_oidc_issuer_url
-}
+data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
 
 data "aws_iam_policy_document" "web_identity_assume_role_policy" {
   statement {
@@ -15,18 +8,18 @@ data "aws_iam_policy_document" "web_identity_assume_role_policy" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(aws_iam_openid_connect_provider.openid.url, "https://", "")}:sub"
-      values   = ["system:serviceaccount:default:devpie"]
+      variable = "${replace(module.eks_blueprints.eks_oidc_issuer_url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:kube-system:aws-node"]
     }
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(aws_iam_openid_connect_provider.openid.url, "https://", "")}:aud"
+      variable = "${replace(module.eks_blueprints.eks_oidc_issuer_url, "https://", "")}:aud"
       values   = ["sts.amazonaws.com"]
     }
 
     principals {
-      identifiers = [aws_iam_openid_connect_provider.openid.arn]
+      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${module.eks_blueprints.oidc_provider}"]
       type        = "Federated"
     }
   }
