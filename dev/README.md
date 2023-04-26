@@ -67,20 +67,17 @@ $ make
 - Setup Instructions -
 
 1. make init
-2. make plan-eks
-3. make apply-eks
-4. make plan-saas
-5. make apply-saas
-6. make setup
+2. make plan
+3. make apply
+4. make scripts
 
 init                 Initialize workspace
-plan-eks             Perform eks dry run
-plan-saas            Perform saas dry run
-apply-eks            Build eks infrastructure
-apply-saas           Build saas infrastructure
-setup                Execute post infrastructure setup scripts
+plan                 Perform eks dry run
+apply                Build eks infrastructure
+scripts              Execute post infrastructure setup scripts
 delete               Delete argocd application
 destroy              Destroy infrastructure
+
 ```
 
 7. Find and copy the initial password for the ArgoCD UI.
@@ -107,6 +104,7 @@ The username is `saas-admin` and password is the decoded value of `.traefik.pass
 
 11. The SaaS administrator webapp is located at https://admin-dev.devpie.io. You should have received an email with a one time only password. 
 After logging in, you will be asked to change your password.
+12. The customer frontend is located at https://dev.devpie.io
 
 ### References
 
