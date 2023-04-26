@@ -42,10 +42,10 @@ delete: ;@ ## Delete argocd application
 .PHONY: delete
 
 destroy: ;@ ## Destroy infrastructure
-	terraform -chdir="saas" destroy
 	terraform -chdir="eks" destroy -target="module.eks_blueprints_kubernetes_addons" -auto-approve
 	terraform -chdir="eks" destroy -target="module.eks_blueprints" -auto-approve
 	terraform -chdir="eks" destroy -auto-approve
+	terraform -chdir="saas" destroy
 .PHONY: destroy
 
 help:
