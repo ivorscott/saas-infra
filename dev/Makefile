@@ -13,7 +13,7 @@ plan: ;@ ## Perform eks dry run
 
 apply: ;@ ## Build eks infrastructure
 	@ echo "Provisioning infrastructure..."
-	@#terraform -chdir="eks" apply
+	@terraform -chdir="eks" apply
 
 	@v1=$(shell terraform -chdir="eks" output -raw vpc_id); \
 	v2=$(shell terraform -chdir="eks" output -raw vpc_cidr_block); \

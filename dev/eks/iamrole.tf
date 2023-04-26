@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "web_identity_assume_role_policy" {
     condition {
       test     = "StringEquals"
       variable = "${replace(module.eks_blueprints.eks_oidc_issuer_url, "https://", "")}:sub"
-      values   = ["system:serviceaccount:kube-system:aws-node"]
+      values   = ["system:serviceaccount:kube-system:devpie"]
     }
 
     condition {
@@ -26,7 +26,29 @@ data "aws_iam_policy_document" "web_identity_assume_role_policy" {
 }
 
 resource "aws_iam_role" "web_identity_role" {
-  assume_role_policy = data.aws_iam_policy_document.web_identity_assume_role_policy.json
   name               = "AmazonEKS_WEB_Identity_Role"
+  assume_role_policy = data.aws_iam_policy_document.web_identity_assume_role_policy.json
 }
 
+data "aws_iam_policy_document" "rds_access" {
+  statement {
+    actions = ["rds-db:connect"]
+    effect = "Allow"
+    resources = [
+      "arn:aws:rds-db:eu-central-1:${data.aws_caller_identity.current.account_id}:dbuser:admin-default/saas_admin",
+      "arn:aws:rds-db:eu-central-1:${data.aws_caller_identity.current.account_id}:dbuser:users-default/users",
+      "arn:aws:rds-db:eu-central-1:${data.aws_caller_identity.current.account_id}:dbuser:projects-default/projects"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "rds_access_policy" {
+  name        = "AmazonEKS_RDS_Access_Policy"
+  description = "Amazon EKS RDS access policy for pods"
+  policy      = data.aws_iam_policy_document.rds_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "role_policy_attachment" {
+  policy_arn = aws_iam_policy.rds_access_policy.arn
+  role       = aws_iam_role.web_identity_role.name
+}

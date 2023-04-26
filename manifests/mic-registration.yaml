@@ -13,6 +13,7 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-auth
+      serviceAccountName: devpie
       containers:
         - image: ghcr.io/devpies/registration:5895cd4
           name: mic-registration

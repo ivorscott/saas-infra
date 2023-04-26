@@ -101,13 +101,17 @@ module "eks_blueprints_kubernetes_addons" {
     })]
   }
 
-
   tags = local.tags
 }
 
 # Extend default EKS role
 resource "aws_iam_role_policy_attachment" "eks-AmazonEKSVPCResourceController" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = module.eks_blueprints.managed_node_group_iam_role_names[0]
+}
+
+resource "aws_iam_role_policy_attachment" "eks-AmazonEKS_CNI_Policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = module.eks_blueprints.managed_node_group_iam_role_names[0]
 }
 
