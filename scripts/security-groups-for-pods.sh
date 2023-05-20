@@ -1,8 +1,7 @@
 cd $1
 
 RDS_SG=$(terraform -chdir="saas" output -raw sg_rds_access);
-EKS_SG=$(terraform -chdir="eks" output -raw cluster_security_group_id);
-RDS_ACCESS_ROLE_ARN=$(terraform -chdir="eks" output -raw web_identity_role_arn)
+NODE_SG=$(terraform -chdir="eks" output -raw worker_node_security_group_id);
 
 # Print cluster's CNI version
 kubectl describe daemonset aws-node --namespace kube-system | grep Image | cut -d "/" -f 2
@@ -18,28 +17,18 @@ kubectl get nodes -o wide -l vpc.amazonaws.com/has-trunk-attached=true
 kubectl patch daemonset aws-node -n kube-system \
   -p '{"spec": {"template": {"spec": {"initContainers": [{"env":[{"name":"DISABLE_TCP_EARLY_DEMUX","value":"true"}],"name":"aws-vpc-cni-init"}]}}}}'
 
-# Create service account, SecurityGroupPolicy and deploy
+# Deploy SecurityGroupPolicy
 kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ServiceAccount
-metadata:
- annotations:
-   eks.amazonaws.com/role-arn: $RDS_ACCESS_ROLE_ARN
- labels:
-   app: devpie
- name: devpie
----
 apiVersion: vpcresources.k8s.aws/v1beta1
 kind: SecurityGroupPolicy
 metadata:
- name: devpie
- namespace: default
+ name: allow-rds-access
 spec:
- serviceAccountSelector:
+ podSelector:
    matchLabels:
-     app: devpie
+     pod: requires-rds
  securityGroups:
    groupIds:
      - $RDS_SG
-     - $EKS_SG
+     - $NODE_SG
 EOF

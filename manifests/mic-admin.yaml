@@ -10,10 +10,10 @@ spec:
     metadata:
       labels:
         app: mic-admin
+        pod: requires-rds
     spec:
       imagePullSecrets:
         - name: ghcr-auth
-      serviceAccountName: devpie
       containers:
         - image: ghcr.io/devpies/admin:5895cd4
           name: mic-admin

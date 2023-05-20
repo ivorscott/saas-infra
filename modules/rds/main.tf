@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.4.5"
+  required_version = ">= 0.15.5, <= 1.4.6"
 }
 
 locals {
@@ -11,12 +11,12 @@ locals {
 }
 
 /**
- * Security Group.
+ * RDS Security Group.
  *
  * The default security group for rds instances.
  */
 resource "aws_security_group" "rds" {
-  name        = "rds-sg-${var.stage}"
+  name        = "RDS_SG"
   description = "Default RDS Security Group"
   vpc_id      = var.vpc_id
 
@@ -37,38 +37,42 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name        = "rds-sg-${var.stage}"
     Environment = var.stage
   }
 }
 
+/**
+ * POD Security Group.
+ *
+ * The default security group for pods requiring rds access.
+ */
 resource "aws_security_group" "rds_access" {
-  name        = "rds-access-from-pod-${var.stage}"
+  name        = "POD_SG"
   description = "Allow RDS Access from Kubernetes Pods"
   vpc_id      = var.vpc_id
 
   # allow POD SG to connect to traefik
-  ingress {
-    from_port = 8000
-    to_port   = 8000
-    protocol  = "tcp"
-    self      = true
-  }
-
-  # allow POD SG to connect to traefik
-  ingress {
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
-    self      = true
-  }
+#  ingress {
+#    from_port = 8000
+#    to_port   = 8000
+#    protocol  = "tcp"
+#    self      = true
+#  }
+#
+#  # allow POD SG to connect to traefik
+#  ingress {
+#    from_port = 443
+#    to_port   = 443
+#    protocol  = "tcp"
+#    self      = true
+#  }
 
   # allow POD SG to connect to NODE GROUP SG using TCP 53
   ingress {
     from_port       = 53
     to_port         = 53
     protocol        = "tcp"
-    security_groups = [var.cluster_security_group_id]
+    security_groups = [var.worker_node_security_group_id]
   }
 
   # allow POD SG to connect to NODE GROUP SG using UDP 53
@@ -76,7 +80,7 @@ resource "aws_security_group" "rds_access" {
     from_port       = 53
     to_port         = 53
     protocol        = "udp"
-    security_groups = [var.cluster_security_group_id]
+    security_groups = [var.worker_node_security_group_id]
   }
 
   egress {
@@ -87,7 +91,6 @@ resource "aws_security_group" "rds_access" {
   }
 
   tags = {
-    Name        = "rds-access-from-pod-${var.stage}"
     Environment = var.stage
   }
 }

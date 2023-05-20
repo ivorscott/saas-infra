@@ -23,12 +23,7 @@ output "database_subnet_group" {
   value = module.vpc.database_subnet_group
 }
 
-output "cluster_security_group_id" {
-  description = "The EKS cluster security group id"
-  value = module.eks_blueprints.cluster_security_group_id
-}
-
-output "web_identity_role_arn" {
-  description = "The web identity based IAM role used by pods"
-  value = aws_iam_role.web_identity_role.arn
+output "worker_node_security_group_id" {
+  description = "The EKS Node security group id"
+  value = module.eks_blueprints.worker_node_security_group_id
 }

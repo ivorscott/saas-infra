@@ -26,21 +26,18 @@ data "aws_acm_certificate" "issued" {
   statuses = ["ISSUED"]
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
   name   = basename(path.cwd)
   iam_role = "eks-service-role"
-  vpc_cidr =  "10.99.0.0/18"
-
-  tags = {
-    Blueprint  = local.name
-    GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
-  }
+  vpc_cidr =  "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 }
 
 #---------------------------------------------------------------
 # EKS Blueprints
 #---------------------------------------------------------------
-
 module "eks_blueprints" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.13.0"
 
@@ -64,8 +61,6 @@ module "eks_blueprints" {
     }
 
   }
-
-  tags = local.tags
 }
 
 module "eks_blueprints_kubernetes_addons" {
@@ -100,8 +95,6 @@ module "eks_blueprints_kubernetes_addons" {
       ]
     })]
   }
-
-  tags = local.tags
 }
 
 # Extend default EKS role
@@ -126,10 +119,10 @@ module "vpc" {
   name = local.name
   cidr = local.vpc_cidr
 
-  azs              = ["${var.region}a", "${var.region}b", "${var.region}c"]
-  public_subnets   = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
-  private_subnets  = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
-  database_subnets = ["10.99.7.0/24", "10.99.8.0/24", "10.99.9.0/24"]
+  azs              = local.azs
+  public_subnets   = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  private_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 3)]
+  database_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 6)]
 
   enable_nat_gateway                 = true
   single_nat_gateway                 = true
@@ -155,6 +148,4 @@ module "vpc" {
     "kubernetes.io/cluster/${local.name}" = "shared"
     "kubernetes.io/role/internal-elb"     = 1
   }
-
-  tags = local.tags
 }

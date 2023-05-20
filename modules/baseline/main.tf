@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.4.5"
+  required_version = ">= 0.15.5, <= 1.4.6"
 }
 
 # Create tenants Table

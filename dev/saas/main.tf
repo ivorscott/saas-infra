@@ -29,5 +29,5 @@ module "rds" {
   vpc_id                    = var.vpc_id
   vpc_cidr_block            = var.vpc_cidr_block
   database_subnet_group     = var.database_subnet_group
-  cluster_security_group_id = var.cluster_security_group_id
+  worker_node_security_group_id = var.worker_node_security_group_id
 }

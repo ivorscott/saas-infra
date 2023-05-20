@@ -35,7 +35,7 @@ variable "database_subnet_group" {
   type = string
 }
 
-variable "cluster_security_group_id" {
-  description = "The EKS cluster security group id"
+variable "worker_node_security_group_id" {
+  description = "The EKS Node security group id"
   type = string
 }

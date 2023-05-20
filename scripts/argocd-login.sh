@@ -1,7 +1,6 @@
 #!/bin/bash
 
-read -sp 'Enter the ArgoCD admin password: ' password
-echo '***************'
+password=`kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo`
 
 argocd login \
 --username "admin" \

@@ -18,12 +18,12 @@ apply: ;@ ## Build eks infrastructure
 	@v1=$(shell terraform -chdir="eks" output -raw vpc_id); \
 	v2=$(shell terraform -chdir="eks" output -raw vpc_cidr_block); \
 	v3=$(shell terraform -chdir="eks" output -raw database_subnet_group); \
-	v4=$(shell terraform -chdir="eks" output -raw cluster_security_group_id); \
+	v4=$(shell terraform -chdir="eks" output -raw worker_node_security_group_id); \
 	terraform -chdir="saas" apply \
 	-var="vpc_id=$$v1" \
 	-var="vpc_cidr_block=$$v2" \
 	-var="database_subnet_group=$$v3" \
-	-var="cluster_security_group_id=$$v4"
+	-var="worker_node_security_group_id=$$v4"
 .PHONY: apply
 
 scripts: ;@ ## Execute post infrastructure setup scripts
