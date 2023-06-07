@@ -53,6 +53,18 @@ resource "aws_dynamodb_table" "auth_info" {
   write_capacity = 5
 }
 
+resource "aws_dynamodb_table_item" "add_auth_info_item" {
+  table_name = aws_dynamodb_table.auth_info.name
+  hash_key   = aws_dynamodb_table.auth_info.hash_key
+
+  item = templatefile("${path.module}/templates/auth_info_item.json",
+    {
+      userPoolId       = var.shared_user_pool_id
+      userPoolClientId = var.shared_user_pool_client_id
+    }
+  )
+}
+
 # Create silo-config table
 resource "aws_dynamodb_table" "silo_config" {
   name = "${var.stage}-silo-config"

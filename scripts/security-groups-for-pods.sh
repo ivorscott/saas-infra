@@ -1,13 +1,13 @@
 cd $1
 
-RDS_SG=$(terraform -chdir="saas" output -raw sg_rds_access);
-NODE_SG=$(terraform -chdir="eks" output -raw worker_node_security_group_id);
+POD_SG=$(terraform -chdir="saas" output -raw sg_rds_access);
 
 # Print cluster's CNI version
 kubectl describe daemonset aws-node --namespace kube-system | grep Image | cut -d "/" -f 2
 
 # Enable the Amazon VPC CNI add-on to manage network interfaces for pods
 kubectl set env daemonset aws-node -n kube-system ENABLE_POD_ENI=true
+kubectl -n kube-system rollout status ds aws-node
 
 # Print which nodes have aws-k8s-trunk-eni set to true
 kubectl get nodes -o wide -l vpc.amazonaws.com/has-trunk-attached=true
@@ -29,6 +29,7 @@ spec:
      pod: requires-rds
  securityGroups:
    groupIds:
-     - $RDS_SG
-     - $NODE_SG
+     - $POD_SG
 EOF
+
+kubectl describe securitygrouppolicy

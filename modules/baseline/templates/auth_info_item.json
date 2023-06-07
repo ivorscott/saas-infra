@@ -1,0 +1,6 @@
+{
+  "tenantPath": {"S": "/app"},
+  "userPoolId": {"S": "${userPoolId}"},
+  "userPoolType": {"S": "pooled"},
+  "userPoolClientId": {"S": "${userPoolClientId}"}
+}

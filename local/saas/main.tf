@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.15.5, <= 1.2.3"
+  required_version = ">= 0.15.5, <= 1.4.6"
 
   required_providers {
     aws = {
@@ -21,13 +21,15 @@ module "admin" {
   admin_email_address = var.email
 }
 
-module "baseline" {
-  source = "../../modules/baseline"
-  stage               = var.stage
-}
-
 module "tenant" {
   source = "../../modules/tenant"
   stage         = var.stage
   hostname      = var.hostname
+}
+
+module "baseline" {
+  source = "../../modules/baseline"
+  stage               = var.stage
+  shared_user_pool_id = module.tenant.shared_user_pool_id
+  shared_user_pool_client_id = module.tenant.shared_user_pool_client_id
 }

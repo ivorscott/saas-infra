@@ -28,14 +28,6 @@ resource "aws_security_group" "rds" {
     security_groups = [aws_security_group.rds_access.id]
   }
 
-  egress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = [var.vpc_cidr_block]
-    security_groups = [aws_security_group.rds_access.id]
-  }
-
   tags = {
     Environment = var.stage
   }
@@ -51,36 +43,28 @@ resource "aws_security_group" "rds_access" {
   description = "Allow RDS Access from Kubernetes Pods"
   vpc_id      = var.vpc_id
 
-  # allow POD SG to connect to traefik
-#  ingress {
-#    from_port = 8000
-#    to_port   = 8000
-#    protocol  = "tcp"
-#    self      = true
-#  }
-#
-#  # allow POD SG to connect to traefik
-#  ingress {
-#    from_port = 443
-#    to_port   = 443
-#    protocol  = "tcp"
-#    self      = true
-#  }
-
-  # allow POD SG to connect to NODE GROUP SG using TCP 53
   ingress {
-    from_port       = 53
-    to_port         = 53
-    protocol        = "tcp"
-    security_groups = [var.worker_node_security_group_id]
+    description = "Inbound traffic from admin service"
+    from_port   = "4000"
+    to_port     = "4000"
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
-  # allow POD SG to connect to NODE GROUP SG using UDP 53
   ingress {
-    from_port       = 53
-    to_port         = 53
-    protocol        = "udp"
-    security_groups = [var.worker_node_security_group_id]
+    description = "Inbound traffic from project service"
+    from_port   = "4004"
+    to_port     = "4004"
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr_block]
+  }
+
+  ingress {
+    description = "Inbound traffic from user service"
+    from_port   = "4005"
+    to_port     = "4005"
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
   egress {

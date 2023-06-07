@@ -12,12 +12,12 @@ kubectl create secret generic aws.secrets \
 
 # Generate the Docker Registry secret
 echo "Generating Docker Registry secret..."
-githubreadtoken=`cat .ghcr.token`
+githubtoken=`cat .ghcr.token`
 
 kubectl create secret docker-registry ghcr-auth \
 --docker-server=https://ghcr.io \
 --docker-username=ivorscott \
---docker-password=$githubreadtoken \
+--docker-password=$githubtoken \
 --docker-email=ivor@devpie.io \
 --save-config \
 --dry-run=client \
@@ -46,8 +46,8 @@ cd $1/saas
 echo "Generating Cognito secrets..."
 kubectl create secret generic cognito.secrets \
 --from-literal=admin_user_pool_id=$(terraform output -raw admin_user_pool_id) \
---from-literal=admin_app_client_id=$(terraform output -raw admin_app_client_id) \
---from-literal=shared_user_pool_id=$(terraform output -raw tenant_user_pool_id) \
+--from-literal=admin_app_client_id=$(terraform output -raw admin_user_pool_client_id) \
+--from-literal=shared_user_pool_id=$(terraform output -raw shared_user_pool_id) \
 --save-config \
 --dry-run=client \
 --output=yaml | kubectl apply -f -
