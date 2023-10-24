@@ -22,13 +22,3 @@ output "database_subnet_group" {
   description = "The VPC database subnet group"
   value = module.vpc.database_subnet_group
 }
-
-output "worker_node_security_group_id" {
-  description = "The EKS Node security group id"
-  value = module.eks_blueprints.worker_node_security_group_id
-}
-
-output "cluster_security_group_id" {
-  description = "The EKS cluster security group id"
-  value = module.eks_blueprints.cluster_security_group_id
-}

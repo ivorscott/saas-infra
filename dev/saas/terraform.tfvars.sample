@@ -7,4 +7,3 @@ rds_instance_type         = "db.t3.micro"
 vpc_id                    = ""
 vpc_cidr_block            = []
 database_subnet_group     = ""
-cluster_security_group_id = ""
