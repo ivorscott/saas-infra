@@ -2,9 +2,24 @@ terraform {
   required_version = ">= 0.15.5, <= 1.4.6"
 }
 
+data "aws_lambda_function" "modifytoken" {
+  function_name = "ModifyTokenFunction"
+}
+
 # Setup Cognito Application UserPool + Invitation Email
 resource "aws_cognito_user_pool" "pool" {
   name = "${var.stage}-SharedTenantPool"
+
+  lambda_config {
+      pre_token_generation = data.aws_lambda_function.modifytoken.arn
+  }
+
+  account_recovery_setting {
+    recovery_mechanism {
+      name     = "verified_email"
+      priority = 1
+    }
+  }
 
   admin_create_user_config {
     allow_admin_create_user_only = true
