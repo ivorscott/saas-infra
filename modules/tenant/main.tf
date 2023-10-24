@@ -4,8 +4,30 @@ terraform {
 
 data "aws_caller_identity" "current" {}
 
-data "aws_lambda_function" "function" {
-  function_name = "modifytokenfunc-${var.stage}"
+data "aws_iam_policy_document" "allow_lambda_dynamodb" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:BatchGetItem",
+      "dynamodb:Scan"
+    ]
+
+    resources = [
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/local-tenants",
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/local-connections"
+    ]
+  }
+}
+
+module "func" {
+  source = "../../modules/func"
+  stage = var.stage
+  region = var.region
+  package_name = "modifytoken"
+  package_description = "Add tenant connections to token before generation."
+  policy_name = "AllowLambdaDynamoDBPolicy"
+  policy_description = "Policy for lambda dynamodb usage"
+  policy_json =  data.aws_iam_policy_document.allow_lambda_dynamodb.json
 }
 
 # Setup Cognito Application UserPool + Invitation Email
@@ -13,7 +35,7 @@ resource "aws_cognito_user_pool" "pool" {
   name = "${var.stage}-SharedTenantPool"
 
   lambda_config {
-      pre_token_generation = data.aws_lambda_function.function.arn
+      pre_token_generation = module.func.lambda_function_arn
   }
 
   account_recovery_setting {
@@ -96,7 +118,7 @@ resource "aws_cognito_user_pool_client" "client" {
 resource "aws_lambda_permission" "allow_cognito" {
   statement_id  = "AllowExecutionFromCognito"
   action        = "lambda:InvokeFunction"
-  function_name = data.aws_lambda_function.function.function_name
+  function_name = module.func.lambda_function_name
   principal     = "cognito-idp.amazonaws.com"
   source_arn    = "arn:aws:cognito-idp:${var.region}:${data.aws_caller_identity.current.account_id}:userpool/${aws_cognito_user_pool.pool.id}"
 }
