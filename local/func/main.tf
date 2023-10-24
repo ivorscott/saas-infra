@@ -127,3 +127,11 @@ resource "aws_lambda_function" "function" {
 
   runtime = "go1.x"
 }
+
+resource "aws_lambda_permission" "allow_cognito" {
+  statement_id  = "AllowExecutionFromCognito"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.function.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = "arn:aws:events:${var.region}:${data.aws_caller_identity.current.account_id}:rule/RunDaily"
+}
