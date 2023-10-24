@@ -12,10 +12,10 @@ plan: ;@ ## Perform eks dry run
 .PHONY: plan
 
 apply: ;@ ## Build eks infrastructure
-	@ echo "Provisioning infrastructure..."
-	@terraform -chdir="eks" apply
+	@echo "Provisioning infrastructure..."
+	terraform -chdir="eks" apply
 
-	@v1=$(shell terraform -chdir="eks" output -raw vpc_id); \
+	v1=$(shell terraform -chdir="eks" output -raw vpc_id); \
 	v2=$(shell terraform -chdir="eks" output -raw vpc_cidr_block); \
 	v3=$(shell terraform -chdir="eks" output -raw database_subnet_group); \
 	terraform -chdir="saas" apply \
@@ -25,7 +25,7 @@ apply: ;@ ## Build eks infrastructure
 .PHONY: apply
 
 scripts: ;@ ## Execute post infrastructure setup scripts
-	@ CLUSTER_NAME=$(shell terraform -chdir="eks" output -raw eks_cluster_name); \
+	@CLUSTER_NAME=$(shell terraform -chdir="eks" output -raw eks_cluster_name); \
 	aws eks --region $$AWS_DEFAULT_REGION update-kubeconfig --name $$CLUSTER_NAME;
 
 	@cd ..; ./scripts/security-groups-for-pods.sh dev
@@ -40,10 +40,13 @@ delete: ;@ ## Delete argocd application
 .PHONY: delete
 
 destroy: ;@ ## Destroy infrastructure
+	@echo "WARNING! Destroying development environment infrastructure..."
+	@cd ..; ./scripts/confirm.sh
+
 	terraform -chdir="eks" destroy -target="module.eks_blueprints_kubernetes_addons" -auto-approve
 	terraform -chdir="eks" destroy -target="module.eks_blueprints" -auto-approve
 	terraform -chdir="eks" destroy -auto-approve
-	terraform -chdir="saas" destroy
+	terraform -chdir="saas" destroy -auto-approve
 .PHONY: destroy
 
 help:

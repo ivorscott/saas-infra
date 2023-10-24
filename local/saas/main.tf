@@ -1,42 +1,49 @@
-terraform {
-  required_version = ">= 0.15.5, <= 1.4.6"
+data "aws_caller_identity" "current" {}
 
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "4.13.0"
-    }
-    archive = {
-      source = "hashicorp/archive"
-    }
-    null = {
-      source = "hashicorp/null"
-    }
+data "aws_iam_policy_document" "allow_lambda_dynamodb" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:BatchGetItem",
+      "dynamodb:Scan"
+    ]
+
+    resources = [
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/local-tenants",
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/local-connections"
+    ]
   }
 }
 
-provider "aws" {
+module "func" {
+  source = "../../modules/func"
+  stage = var.stage
   region = var.region
-  profile = var.profile
+  package_name = "modifytoken"
+  package_description = "Add tenant connections to token before generation."
+  policy_name = "AllowLambdaDynamoDBPolicy"
+  policy_description = "Policy for lambda dynamodb usage"
+  policy_json =  data.aws_iam_policy_document.allow_lambda_dynamodb.json
 }
 
 module "admin" {
-  source = "../../modules/admin"
+  source              = "../../modules/admin"
   stage               = var.stage
-  hostname             = var.hostname
+  hostname            = var.hostname
   admin_email_address = var.email
 }
 
 module "tenant" {
-  source = "../../modules/tenant"
+  source        = "../../modules/tenant"
   stage         = var.stage
   hostname      = var.hostname
+  region        = var.region
 }
 
 module "baseline" {
-  source = "../../modules/baseline"
-  stage               = var.stage
-  shared_user_pool_id = module.tenant.shared_user_pool_id
+  source                     = "../../modules/baseline"
+  stage                      = var.stage
+  shared_user_pool_id        = module.tenant.shared_user_pool_id
   shared_user_pool_client_id = module.tenant.shared_user_pool_client_id
 }
 

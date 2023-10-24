@@ -5,11 +5,13 @@ variable "profile" {
 
 variable "region" {
   description = "The AWS region to use."
+  default = "eu-central-1"
   type = string
 }
 
 variable "stage" {
   description = "The deployment stage."
+  default = "dev"
   type = string
 }
 

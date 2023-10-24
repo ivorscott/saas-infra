@@ -2,8 +2,10 @@ terraform {
   required_version = ">= 0.15.5, <= 1.4.6"
 }
 
-data "aws_lambda_function" "modifytoken" {
-  function_name = "ModifyTokenFunction"
+data "aws_caller_identity" "current" {}
+
+data "aws_lambda_function" "function" {
+  function_name = "ModifyTokenFunction-${var.stage}"
 }
 
 # Setup Cognito Application UserPool + Invitation Email
@@ -11,7 +13,7 @@ resource "aws_cognito_user_pool" "pool" {
   name = "${var.stage}-SharedTenantPool"
 
   lambda_config {
-      pre_token_generation = data.aws_lambda_function.modifytoken.arn
+      pre_token_generation = data.aws_lambda_function.function.arn
   }
 
   account_recovery_setting {
@@ -83,10 +85,18 @@ resource "aws_cognito_user_pool_client" "client" {
 
   user_pool_id = aws_cognito_user_pool.pool.id
 
-  generate_secret     = false
-  explicit_auth_flows = ["ALLOW_ADMIN_USER_PASSWORD_AUTH", "ALLOW_CUSTOM_AUTH", "ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
-  allowed_oauth_flows = ["code", "implicit"]
-  allowed_oauth_scopes = ["email", "openid", "phone", "profile"]
-  callback_urls = ["https://${var.hostname}/auth-challenge"]
+  generate_secret               = false
+  explicit_auth_flows           = ["ALLOW_ADMIN_USER_PASSWORD_AUTH", "ALLOW_CUSTOM_AUTH", "ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
+  allowed_oauth_flows           = ["code", "implicit"]
+  allowed_oauth_scopes          = ["email", "openid", "phone", "profile"]
+  callback_urls                 = ["https://${var.hostname}/auth-challenge"]
   prevent_user_existence_errors = "ENABLED"
+}
+
+resource "aws_lambda_permission" "allow_cognito" {
+  statement_id  = "AllowExecutionFromCognito"
+  action        = "lambda:InvokeFunction"
+  function_name = data.aws_lambda_function.function.function_name
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = "arn:aws:cognito-idp:${var.region}:${data.aws_caller_identity.current.account_id}:userpool/${aws_cognito_user_pool.pool.id}"
 }

@@ -2,23 +2,22 @@
 .DEFAULT_GOAL := help
 
 init: ;@ ## Initialize workspace
-	terraform -chdir="func" init
 	terraform -chdir="saas" init
 .PHONY: init
 
 plan: ;@ ## Perform dry run
-	terraform -chdir="func" plan
 	terraform -chdir="saas" plan
 .PHONY: plan
 
 apply: ;@ ## Build infrastructure
-	terraform -chdir="func" apply
 	terraform -chdir="saas" apply
 .PHONY: apply
 
 destroy: ;@ ## Destroy infrastructure
-	terraform -chdir="func" destroy
-	terraform -chdir="saas" destroy
+	@echo "WARNING! Destroying local environment infrastructure..."
+	@cd ..; ./scripts/confirm.sh
+
+	terraform -chdir="saas" destroy -auto-approve
 .PHONY: destroy
 
 help:
