@@ -5,7 +5,7 @@ terraform {
 data "aws_caller_identity" "current" {}
 
 data "aws_lambda_function" "function" {
-  function_name = "ModifyTokenFunction-${var.stage}"
+  function_name = "modifytokenfunc-${var.stage}"
 }
 
 # Setup Cognito Application UserPool + Invitation Email
