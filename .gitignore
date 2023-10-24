@@ -9,3 +9,4 @@ trust-policy.json
 .ghcr.token
 .traefik.password
 .DS_Store
+.core

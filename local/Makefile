@@ -3,15 +3,23 @@
 
 init: ;@ ## Initialize workspace
 	terraform -chdir="saas" init
+	terraform -chdir="func" init
 .PHONY: init
 
 plan: ;@ ## Perform dry run
 	terraform -chdir="saas" plan
+	terraform -chdir="func" plan
 .PHONY: plan
 
 apply: ;@ ## Build infrastructure
 	terraform -chdir="saas" apply
+	terraform -chdir="func" apply
 .PHONY: apply
+
+destroy: ;@ ## Destroy infrastructure
+	terraform -chdir="saas" destroy
+	terraform -chdir="func" destroy
+.PHONY: destroy
 
 help:
 	@echo
