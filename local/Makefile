@@ -15,9 +15,7 @@ apply: ;@ ## Build infrastructure
 
 destroy: ;@ ## Destroy infrastructure
 	@echo "WARNING! Destroying local environment infrastructure..."
-	@cd ..; ./scripts/confirm.sh
-
-	terraform -chdir="saas" destroy -auto-approve
+	terraform -chdir="saas" destroy
 .PHONY: destroy
 
 help:
