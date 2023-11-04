@@ -9,7 +9,7 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 - aws account
 - s3 bucket for terraform state named: `devpie.io-terraform`
 - github personal access token with `read:packages` scope
-- install [terraform](https://www.terraform.io/) <= 1.3.5
+- install [terraform](https://www.terraform.io/) <= 1.4.6
 - route53 hosted zone 
 - existing domain in hosted zone
 - install [argocd cli](https://argo-cd.readthedocs.io/en/stable/getting_started/#2-download-argo-cd-cli)
@@ -85,7 +85,7 @@ destroy              Destroy infrastructure
 kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 ```
 
-8. Navigate to the ArgoCD UI: `http://localhost:8080` or `https://argocd-dev.devpie.io`. Login with the copied initial password; the username is `admin`. Once logged in, 
+8. Navigate to the ArgoCD UI: https://argocd-dev.devpie.io. Login with the copied initial password; the username is `admin`. Once logged in, 
 update your password to something else.
 
 9. Navigate to https://traefik-dev.devpie.io/dashboard/#/ to see the Traefik dashboard.

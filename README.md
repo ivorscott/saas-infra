@@ -1,6 +1,15 @@
-# Local Infra
+# SaaS-Infra
 
-Multi-tenant SaaS app built on AWS
+This project has 3 repositories:
+
+- [sass-core](https://github.com/devpies/saas-core)
+- [sass-client](https://github.com/devpies/saas-client) 
+- [sass-infra](https://github.com/devpies/saas-infra) (this repo)
+
+## Overview
+
+SaaS-Infra is multi-tenant SaaS infrastructure built on AWS, provisioned by terraform. 
+This infrastructure supports both SaaS-Client and SaaS-Core.
 
 ## Getting Started
 
@@ -9,16 +18,16 @@ It deploys an AWS EKS cluster, 3 RDS Postgres instances and more.
 
 #### Local Requirements
 - aws account
-- install [terraform](https://www.terraform.io/) <= 1.3.5
+- install [terraform](https://www.terraform.io/) <= 1.4.6
 
 ### Setup
-1. Configure your `~/.bash_profile` or `~/.zprofile` with AWS credentials.
+1. Configure your `~/.bashrc` or `~/.zshrc` with AWS credentials.
     ```bash
     export AWS_ACCESS_KEY_ID=<YourAccessKeyID>
     export AWS_SECRET_ACCESS_KEY=<YourSecretAccessKey>
     export AWS_DEFAULT_REGION=<YourDefaultRegion>
     ```
-   Apply the changes by executing `source ~/.bash_profile` or `source ~/.zprofile` in your terminal.
+   Apply the changes by executing `source ~/.bashrc` or `source ~/.zshrc` in your terminal.
 
 2. Create a named profile.
 
