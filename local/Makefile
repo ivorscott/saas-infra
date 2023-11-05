@@ -10,7 +10,7 @@ plan: ;@ ## Perform dry run
 .PHONY: plan
 
 apply: ;@ ## Build infrastructure
-	#terraform -chdir="saas" apply
+	terraform -chdir="saas" apply
 
 	@M2M_POOL_ID=$(shell terraform -chdir="saas" output -raw shared_user_pool_id); \
 	M2M_USER="M2M-admin-client-application"; \
