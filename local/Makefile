@@ -10,7 +10,12 @@ plan: ;@ ## Perform dry run
 .PHONY: plan
 
 apply: ;@ ## Build infrastructure
-	terraform -chdir="saas" apply
+	#terraform -chdir="saas" apply
+
+	@M2M_POOL_ID=$(shell terraform -chdir="saas" output -raw shared_user_pool_id); \
+	M2M_USER="M2M-admin-client-application"; \
+	M2M_PASSWORD=$(shell openssl rand -hex 16); \
+	cd ..; ./scripts/create-m2m-clients.sh "$$M2M_POOL_ID" "$$M2M_USER" "P$$M2M_PASSWORD!"
 .PHONY: apply
 
 destroy: ;@ ## Destroy infrastructure

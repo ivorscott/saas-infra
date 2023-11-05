@@ -1,4 +1,5 @@
 #!/bin/bash
+# This script creates a confirmation prompt.
 
 read -r -p "Are you sure? [y/N] " response
 case "$response" in

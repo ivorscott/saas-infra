@@ -1,3 +1,6 @@
+#!/bin/bash
+# This script automates security groups for pods.
+
 cd $1
 
 POD_SG=$(terraform -chdir="saas" output -raw sg_rds_access);
