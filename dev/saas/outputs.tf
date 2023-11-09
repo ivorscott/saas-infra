@@ -50,6 +50,24 @@ output "postgres_password_projects" {
   sensitive = true
 }
 
+output "postgres_instance_id_subscriptions" {
+  value = module.rds.db_subscriptions_instance_id
+}
+
+output "postgres_hostname_subscriptions" {
+  value = module.rds.db_subscriptions_instance_address
+}
+
+output "postgres_username_subscriptions" {
+  value = module.rds.db_subscriptions_instance_username
+  sensitive = true
+}
+
+output "postgres_password_subscriptions" {
+  value = module.rds.db_subscriptions_instance_password
+  sensitive = true
+}
+
 output "postgres_instance_id_admin" {
   value = module.rds.db_admin_instance_id
 }

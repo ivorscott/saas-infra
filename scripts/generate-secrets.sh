@@ -64,6 +64,9 @@ kubectl create secret generic postgres.secrets \
 --from-literal=postgres_username_projects=$(terraform output -raw postgres_username_projects) \
 --from-literal=postgres_password_projects=$(terraform output -raw postgres_password_projects) \
 --from-literal=postgres_hostname_projects=$(terraform output -raw postgres_hostname_projects) \
+--from-literal=postgres_username_subscriptions=$(terraform output -raw postgres_username_subscriptions) \
+--from-literal=postgres_password_subscriptions=$(terraform output -raw postgres_password_subscriptions) \
+--from-literal=postgres_hostname_subscriptions=$(terraform output -raw postgres_hostname_subscriptions) \
 --save-config \
 --dry-run=client \
 --output=yaml | kubectl apply -f -

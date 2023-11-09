@@ -22,6 +22,11 @@ apply: ;@ ## Build eks infrastructure
 	-var="vpc_id=$$v1" \
 	-var="vpc_cidr_block=$$v2" \
 	-var="database_subnet_group=$$v3"
+
+	@M2M_POOL_ID=$(shell terraform -chdir="saas" output -raw shared_user_pool_id); \
+    	M2M_USER="M2M-admin-client-application"; \
+    	M2M_PASSWORD=$(shell openssl rand -hex 16); \
+    	cd ..; ./scripts/create-m2m-clients.sh "$$M2M_POOL_ID" "$$M2M_USER" "P$$M2M_PASSWORD!"
 .PHONY: apply
 
 scripts: ;@ ## Execute post infrastructure setup scripts

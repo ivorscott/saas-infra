@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mic-subscription
+spec:
+  selector:
+    matchLabels:
+      app: mic-subscription
+  template:
+    metadata:
+      labels:
+        app: mic-subscription
+        pod: requires-rds
+    spec:
+      imagePullSecrets:
+        - name: ghcr-auth
+      containers:
+        - image: subscription:latest
+          name: mic-subscription
+          ports:
+            - containerPort: 4006
+          imagePullPolicy: Always
+          env:
+            - name: SUBSCRIPTION_WEB_PRODUCTION
+              value: "true"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: aws_secret_access_key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: SUBSCRIPTION_WEB_PORT
+              value: "4006"
+            - name: SUBSCRIPTION_COGNITO_SHARED_USER_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: shared_user_pool_id
+            - name: SUBSCRIPTION_COGNITO_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: cfg
+                  key: region
+            - name: SUBSCRIPTION_STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: subscription_stripe_key
+            - name: SUBSCRIPTION_STRIPE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: subscription_stripe_secret
+            - name: SUBSCRIPTION_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres.secrets
+                  key: postgres_hostname_subscriptions
+            - name: SUBSCRIPTION_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres.secrets
+                  key: postgres_username_subscriptions
+            - name: SUBSCRIPTION_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres.secrets
+                  key: postgres_password_subscriptions
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mic-subscription-svc
+spec:
+  selector:
+    app: mic-subscription
+  ports:
+    - port: 4006
+      targetPort: 4006

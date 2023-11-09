@@ -50,6 +50,14 @@ spec:
       middlewares:
         - name: headers
         - name: stripprefix
+    - match: Host(`api-dev.devpie.io`) && PathPrefix(`/api/subscriptions`)
+      kind: Rule
+      services:
+        - name: mic-subscription-svc
+          port: 4004
+      middlewares:
+        - name: headers
+        - name: stripprefix
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
