@@ -15,7 +15,7 @@ spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: subscription:ca008c1
+        - image: subscription:0c714f4
           name: mic-subscription
           ports:
             - containerPort: 4006
