@@ -76,9 +76,23 @@ EOF
   }
 
   schema {
-    attribute_data_type = "String"
+    attribute_data_type = "Number"
     name                = "account-owner"
     mutable             = false
+    number_attribute_constraints {
+      min_value = "0"
+      max_value = "1"
+    }
+  }
+
+  schema {
+    attribute_data_type = "Number"
+    name                = "m2m-client"
+    mutable             = false
+    number_attribute_constraints {
+      min_value = "0"
+      max_value = "1"
+    }
   }
 
   schema {
