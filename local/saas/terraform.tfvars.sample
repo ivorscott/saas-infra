@@ -1,5 +1,5 @@
 profile  = ""
 region  = "eu-central-1"
 stage   = "local"
-hostname = "devpie.local"
+hostname = "devpie.local:3000"
 email   = ""
