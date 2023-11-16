@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "assume_lambda_role" {
 
 // create lambda role, that lambda function can assume (use)
 resource "aws_iam_role" "lambda" {
-  name               = "AssumeLambdaRole-${var.stage}"
+  name               = "AssumeLambdaRole-${var.package_name}-${var.stage}"
   description        = "Role for lambda to assume lambda"
   assume_role_policy = data.aws_iam_policy_document.assume_lambda_role.json
 }
@@ -45,14 +45,14 @@ data "aws_iam_policy_document" "allow_lambda_logging" {
 
 // create a policy to allow writing into logs and create logs stream
 resource "aws_iam_policy" "function_logging_policy" {
-  name        = "AllowLambdaLoggingPolicy-${var.stage}"
+  name        = "AllowLambdaLoggingPolicy-${var.package_name}-${var.stage}"
   description = "Policy for lambda cloudwatch logging"
   policy      = data.aws_iam_policy_document.allow_lambda_logging.json
 }
 
 // create a main policy for lambda function
 resource "aws_iam_policy" "function_main_policy" {
-  name        = "${var.policy_name}-${var.stage}"
+  name        = "${var.policy_name}-${var.package_name}-${var.stage}"
   description = var.policy_description
   policy      = var.policy_json
 }
@@ -87,6 +87,9 @@ resource "null_resource" "function_binary" {
       git pull origin main
 
       cd pkg/lambda/${var.package_name}
+
+      ${var.operation}
+
       GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOFLAGS=-trimpath go build -mod=readonly -ldflags='-s -w' .
     EOT
   }

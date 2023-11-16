@@ -1,22 +1,24 @@
 
 .DEFAULT_GOAL := help
 
-init: ;@ ## Initialize workspace
+init: ;@ ## Initialize workspace.
 	terraform -chdir="saas" init
 .PHONY: init
 
-plan: ;@ ## Perform dry run
+plan: ;@ ## Perform dry run.
 	terraform -chdir="saas" plan
 .PHONY: plan
 
-apply: ;@ ## Build infrastructure
+apply: ;@ ## Build infrastructure.
 	terraform -chdir="saas" apply
+.PHONY: apply
 
+m2m: ;@ ## Build M2M client application key and secret.
 	@M2M_POOL_ID=$(shell terraform -chdir="saas" output -raw shared_user_pool_id); \
 	M2M_USER="M2M-admin-client-application"; \
 	M2M_PASSWORD=$(shell openssl rand -hex 16); \
 	cd ..; ./scripts/create-m2m-clients.sh "$$M2M_POOL_ID" "$$M2M_USER" "P$$M2M_PASSWORD!"
-.PHONY: apply
+.PHONY: m2m
 
 destroy: ;@ ## Destroy infrastructure
 	@echo "WARNING! Destroying local environment infrastructure..."

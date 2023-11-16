@@ -34,3 +34,9 @@ variable "policy_description" {
   description = "The lambda policy permission description."
   type = string
 }
+
+variable "operation" {
+  description = "A command line operation to run."
+  default = ""
+  type = string
+}

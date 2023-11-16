@@ -9,6 +9,7 @@ data "aws_iam_policy_document" "allow_lambda_dynamodb" {
     effect = "Allow"
     actions = [
       "dynamodb:BatchGetItem",
+      "dynamodb:UpdateItem",
       "dynamodb:Scan"
     ]
 
@@ -19,7 +20,7 @@ data "aws_iam_policy_document" "allow_lambda_dynamodb" {
   }
 }
 
-module "func" {
+module "modifytoken" {
   source = "../../modules/func"
   stage = var.stage
   region = var.region
@@ -30,12 +31,25 @@ module "func" {
   policy_json =  data.aws_iam_policy_document.allow_lambda_dynamodb.json
 }
 
+module "updatestatus" {
+  source = "../../modules/func"
+  stage = var.stage
+  region = var.region
+  package_name = "updatestatus"
+  package_description = "Update tenant status post sign up confirmation."
+  policy_name = "AllowLambdaDynamoDBPolicy"
+  policy_description = "Policy for lambda dynamodb usage"
+  policy_json =  data.aws_iam_policy_document.allow_lambda_dynamodb.json
+  operation="sed -i 's/TableName: aws.String(.*/TableName: aws.String(\"${var.stage}-tenants\"),/' ./main.go"
+}
+
 # Setup Cognito Application UserPool + Invitation Email
 resource "aws_cognito_user_pool" "pool" {
   name = "${var.stage}-SharedTenantPool"
 
   lambda_config {
-      pre_token_generation = module.func.lambda_function_arn
+      pre_token_generation = module.modifytoken.lambda_function_arn
+      post_confirmation = module.updatestatus.lambda_function_arn
   }
 
   account_recovery_setting {
@@ -129,10 +143,18 @@ resource "aws_cognito_user_pool_client" "client" {
   prevent_user_existence_errors = "ENABLED"
 }
 
-resource "aws_lambda_permission" "allow_cognito" {
-  statement_id  = "AllowExecutionFromCognito"
+resource "aws_lambda_permission" "allow_cognito_to_modifytoken" {
+  statement_id  = "AllowModifyTokenExecutionFromCognito"
   action        = "lambda:InvokeFunction"
-  function_name = module.func.lambda_function_name
+  function_name = module.modifytoken.lambda_function_name
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = "arn:aws:cognito-idp:${var.region}:${data.aws_caller_identity.current.account_id}:userpool/${aws_cognito_user_pool.pool.id}"
+}
+
+resource "aws_lambda_permission" "allow_cognito_to_updatestatus" {
+  statement_id  = "AllowUpdateStatusExecutionFromCognito"
+  action        = "lambda:InvokeFunction"
+  function_name = module.updatestatus.lambda_function_name
   principal     = "cognito-idp.amazonaws.com"
   source_arn    = "arn:aws:cognito-idp:${var.region}:${data.aws_caller_identity.current.account_id}:userpool/${aws_cognito_user_pool.pool.id}"
 }
