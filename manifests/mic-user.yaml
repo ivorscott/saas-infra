@@ -15,7 +15,7 @@ spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - image: ghcr.io/devpies/user:095717e
+        - image: ghcr.io/devpies/user:5e89bc7
           name: mic-user
           ports:
             - containerPort: 4005
